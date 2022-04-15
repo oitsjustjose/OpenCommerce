@@ -29,8 +29,10 @@ export default async (req: Request, res: Response) => {
     if (req.body.email) {
       await ValidateEmail(user);
     }
-
-    return res.status(200).json({ "Successfully Deleted": user });
+    return res.status(200).json({
+      ...user,
+      password: "REDACTED",
+    });
   } catch (ex) {
     LOGGER.error(ex);
     return res.status(500).json({ error: ex });
