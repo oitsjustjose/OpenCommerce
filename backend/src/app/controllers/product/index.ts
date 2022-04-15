@@ -1,4 +1,4 @@
-import { RouteCollection } from "../routes";
+import { RouteCollection } from "..";
 import create from "./crud/create";
 import del from "./crud/delete";
 import get from "./crud/get";

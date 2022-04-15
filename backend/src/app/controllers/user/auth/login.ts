@@ -6,8 +6,8 @@
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import moment from "moment";
-import Users, { UserModel } from "../../models/User";
-import { LOGGER } from "../../util/Logger";
+import Users, { UserModel } from "../../../models/User";
+import { LOGGER } from "../../../util/Logger";
 
 export default async (req: Request, res: Response) => {
   try {

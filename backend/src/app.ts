@@ -1,7 +1,7 @@
 import { json, urlencoded } from "body-parser";
 import cors from "cors";
 import express from "express";
-import Routes from "./app/controllers/routes";
+import Routes from "./app/controllers";
 import AccessLog from "./app/middleware/AccessLog";
 import UserInjection from "./app/middleware/UserInjection";
 import { UserModel } from "./app/models/User";
