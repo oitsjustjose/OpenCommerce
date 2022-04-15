@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import Users from "../../models/User";
-import { LOGGER } from "../../util/Logger";
+import Users from "../../../models/User";
+import { LOGGER } from "../../../util/Logger";
 
 export default async (req: Request, res: Response) => {
   try {

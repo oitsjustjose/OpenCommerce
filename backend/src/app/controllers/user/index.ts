@@ -2,8 +2,8 @@ import { RouteCollection } from "../routes";
 import create from "./crud/create";
 import del from "./crud/delete";
 import forgot from "./crud/forgot";
-import login from "./login";
-import validate from "./validate";
+import login from "./auth/login";
+import validate from "./auth/validate";
 
 const routes: RouteCollection[] = [
   {

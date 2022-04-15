@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import ProductRoutes from "./product/routes";
-import ReviewRoutes from "./review/routes";
-import UserRoutes from "./user/routes";
+import ProductRoutes from "./product";
+import ReviewRoutes from "./review";
+import UserRoutes from "./user";
 
 export type RouteCollection = {
   httpMethod: "GET" | "POST" | "DELETE" | "PUT" | "PATCH";
