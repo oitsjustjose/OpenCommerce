@@ -12,8 +12,10 @@
     "react-dom": "^18.0.0",
     "react-icons": "^4.3.1",
     "react-phone-input-2": "^2.15.0",
+    "react-redux": "^7.2.8",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "redux": "^4.1.2",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
@@ -21,6 +23,7 @@
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prefer-arrow-functions": "^3.1.4",
     "eslint-plugin-react": "^7.21.4",
     "eslint-plugin-react-hooks": "^4.1.2"
   },
