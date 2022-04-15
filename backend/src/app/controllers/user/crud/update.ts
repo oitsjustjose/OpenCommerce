@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Users from "../../../models/User";
 import { LOGGER } from "../../../util/Logger";
-import Validate from "../../../email/templates/Validate";
+import ValidateEmail from "../../../email/templates/ValidateEmail";
 
 export default async (req: Request, res: Response) => {
   try {
@@ -27,7 +27,7 @@ export default async (req: Request, res: Response) => {
     await user.save();
 
     if (req.body.email) {
-      await Validate(user);
+      await ValidateEmail(user);
     }
 
     return res.status(200).json({ "Successfully Deleted": user });

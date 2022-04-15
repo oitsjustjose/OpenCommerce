@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import AdminRoutes from "./admin/routes";
 import ProductRoutes from "./product/routes";
 import ReviewRoutes from "./review/routes";
 import UserRoutes from "./user/routes";
@@ -14,7 +13,6 @@ const routes: RouteCollection[] = [
   ...ProductRoutes,
   ...UserRoutes,
   ...ReviewRoutes,
-  ...AdminRoutes,
 ];
 
 export default routes;

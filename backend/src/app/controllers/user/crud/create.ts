@@ -1,6 +1,6 @@
 import EmailValidator from "email-validator";
 import { Request, Response } from "express";
-import Validate from "../../../email/templates/Validate";
+import ValidateEmail from "../../../email/templates/ValidateEmail";
 import Users from "../../../models/User";
 import { LOGGER } from "../../../util/Logger";
 
@@ -38,7 +38,7 @@ export default async (req: Request, res: Response) => {
     created.password = created.hashPassword(password);
     await created.save();
 
-    await Validate(created);
+    await ValidateEmail(created);
 
     return res.status(200).json(created);
   } catch (ex) {
