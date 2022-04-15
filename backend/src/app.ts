@@ -7,7 +7,7 @@ import UserInjection from "./app/middleware/UserInjection";
 import { UserModel } from "./app/models/User";
 
 interface AuthenticatableRequest {
-  user: UserModel | null;
+  user?: UserModel;
 }
 
 declare global {
@@ -42,7 +42,9 @@ Routes.forEach(({ path, httpMethod, handler }) => {
       app.patch(path, handler);
       break;
   }
+  console.log("-------------------------------------------------");
   console.log(`${httpMethod}: ${path}`);
 });
+console.log("-------------------------------------------------");
 
 export default app;

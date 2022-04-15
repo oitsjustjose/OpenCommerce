@@ -1,6 +1,7 @@
 import { RouteCollection } from "../routes";
 import create from "./crud/create";
 import del from "./crud/delete";
+import forgot from "./crud/forgot";
 import login from "./login";
 import validate from "./validate";
 
@@ -19,6 +20,11 @@ const routes: RouteCollection[] = [
     httpMethod: "POST",
     path: "/api/v1/user/login",
     handler: login,
+  },
+  {
+    httpMethod: "GET",
+    path: "/api/v1/user/forgot",
+    handler: forgot,
   },
   {
     httpMethod: "GET",
