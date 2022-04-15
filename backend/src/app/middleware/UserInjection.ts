@@ -7,7 +7,7 @@ import { LOGGER } from "../util/Logger";
 export default () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const token = req.header("authorization").replace("Bearer ", "");
+      const token = req.header("authorization").replace("Bearer", "").trim();
 
       if (!token) {
         return next();
