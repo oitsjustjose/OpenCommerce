@@ -1,11 +1,17 @@
 import { RouteCollection } from "..";
-import create from "./crud/create";
-import del from "./crud/delete";
 import forgot from "./auth/forgot";
 import login from "./auth/login";
 import validate from "./auth/validate";
+import create from "./crud/create";
+import del from "./crud/delete";
+import get from "./crud/get";
 
 const routes: RouteCollection[] = [
+  {
+    httpMethod: "GET",
+    path: "/api/v1/user",
+    handler: get,
+  },
   {
     httpMethod: "PUT",
     path: "/api/v1/user",
