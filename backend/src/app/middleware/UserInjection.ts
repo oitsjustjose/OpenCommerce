@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import moment from "moment";
 import Users from "../models/User";
+import { LOGGER } from "../util/Logger";
 
 export default () => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -21,10 +22,11 @@ export default () => {
       }
 
       const user = await Users.findById(_id);
-      req.user = user;
-      next();
+      req.user = user.isEmailValidated ? user : null;
+      return next();
     } catch (err) {
-      return res.status(400).json({ error: `Invalid Token: ${err}` });
+      LOGGER.error(err);
+      return next();
     }
   };
 };

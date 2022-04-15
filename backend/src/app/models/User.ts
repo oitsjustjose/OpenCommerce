@@ -7,6 +7,7 @@ export type UserModel = Document & {
   email: string;
   password: string;
   admin: boolean;
+  isEmailValidated: boolean;
   hashPassword: (password: string) => string;
   validPassword: (password: string) => boolean;
 };
@@ -16,6 +17,10 @@ const UserSchema = new Schema<UserModel>({
   last: String,
   email: String,
   password: String,
+  isEmailValidated: {
+    type: Boolean,
+    default: false,
+  },
   admin: {
     type: Boolean,
     default: false,

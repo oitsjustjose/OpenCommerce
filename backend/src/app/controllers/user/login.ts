@@ -21,6 +21,13 @@ export default async (req: Request, res: Response) => {
         .json({ error: "Email address is not registered." });
     }
 
+    if (!user.isEmailValidated) {
+      return res.status(403).json({
+        error:
+          "This email address has not yet been validated. Please check your email.",
+      });
+    }
+
     if (!user.validPassword(req.body.password)) {
       return res
         .status(404)
