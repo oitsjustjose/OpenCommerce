@@ -4,6 +4,7 @@ export type ProductModel = Document & {
   name: string;
   quantity: number;
   price: number;
+  images: string[];
   hidden: boolean;
 };
 
@@ -20,6 +21,13 @@ const ProductSchema = new Schema<ProductModel>({
     type: Number,
     required: true,
   },
+  images: [
+    {
+      type: String,
+      required: true,
+      default: [],
+    },
+  ],
   hidden: {
     type: Boolean,
     required: true,

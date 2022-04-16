@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 
 // Pages
 import Home from './pages/Home/index';
+import Manage from './pages/Manage/index';
 import Login from './pages/User/Login';
 import Register from './pages/User/Register';
 
@@ -21,6 +22,13 @@ export const Pages = [
     path: '/',
     icon: (<FaShoppingBag />),
     element: (<Home />),
+    hidden: false,
+  },
+  {
+    name: 'Manage',
+    path: '/manage',
+    icon: null,
+    element: (<Manage />),
     hidden: false,
   },
   {
