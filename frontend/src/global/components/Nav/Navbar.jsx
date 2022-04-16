@@ -10,7 +10,7 @@ import { FaHamburger } from 'react-icons/fa';
 import { connect } from 'react-redux';
 import { MdLogin, MdLogout } from 'react-icons/md';
 import Item from './NavbarItem';
-import { Pages } from '../../../App';
+import { Pages } from '../../../Routes';
 
 const NavBar = ({ user }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -32,11 +32,14 @@ const NavBar = ({ user }) => {
             spacing={4}
             display={{ base: 'none', md: 'flex' }}
           >
-
-            {Pages.filter((x) => !x.hidden).map(({ icon, name, path }) => (
-              <Item icon={icon} name={name} to={path} />
-            ))}
-
+            {
+              Pages
+                .filter((x) => !x.hidden)
+                .filter((x) => !x.adminOnly || (x.adminOnly && user?.admin))
+                .map(({ icon, name, path }) => (
+                  <Item key={name} icon={icon} name={name} to={path} />
+                ))
+            }
             {!user && (<Item icon={(<MdLogin />)} name="Log In" to="/login" />)}
             {user && (<Item icon={(<MdLogout />)} name="Log Out" to="/logout" />) }
           </HStack>
@@ -47,10 +50,16 @@ const NavBar = ({ user }) => {
       {isOpen ? (
         <Box pb={4} display={{ md: 'none' }}>
           <Stack as="nav" spacing={4}>
-            {Pages.filter((x) => !x.hidden).map(({ icon, name, path }) => (
-              <Item icon={icon} name={name} to={path} />
-            ))}
-
+            {
+              Pages
+                .filter((x) => !x.hidden)
+                .filter((x) => !x.adminOnly || (x.adminOnly && user?.admin))
+                .map(({ icon, name, path }) => (
+                  <Item key={name} icon={icon} name={name} to={path} />
+                ))
+            }
+            {!user && (<Item icon={(<MdLogin />)} name="Log In" to="/login" />)}
+            {user && (<Item icon={(<MdLogout />)} name="Log Out" to="/logout" />) }
           </Stack>
         </Box>
       ) : null}

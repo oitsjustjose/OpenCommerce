@@ -21,7 +21,6 @@ export default () => {
   return (
     <div>
       <input type="file" multiple accept="image/*" onChange={onChange} />
-
       <hr />
       { data && (
       <div>
@@ -29,7 +28,6 @@ export default () => {
         <p>{data}</p>
       </div>
       )}
-
     </div>
   );
 };

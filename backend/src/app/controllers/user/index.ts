@@ -5,12 +5,18 @@ import validate from "./auth/validate";
 import create from "./crud/create";
 import del from "./crud/delete";
 import get from "./crud/get";
+import decode from "./auth/decode";
 
 const routes: RouteCollection[] = [
   {
     httpMethod: "GET",
     path: "/api/v1/user",
     handler: get,
+  },
+  {
+    httpMethod: "GET",
+    path: "/api/v1/user/decode",
+    handler: decode,
   },
   {
     httpMethod: "PUT",

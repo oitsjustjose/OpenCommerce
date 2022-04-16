@@ -5,7 +5,6 @@ export default ({
   to, name, icon,
 }) => (
   <NavLink
-    exact
     to={to}
     className={({ isActive }) => `chakra-button ${isActive ? 'nav-active' : 'nav-inactive'}`}
   >
