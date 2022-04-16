@@ -1,15 +1,10 @@
-import { config as LoadDotenv } from "dotenv";
-
 import { json, urlencoded } from "body-parser";
 import cors from "cors";
 import express from "express";
-import winston from "winston";
 import Routes from "./app/controllers";
 import AccessLog from "./app/middleware/AccessLog";
 import UserInjection from "./app/middleware/UserInjection";
 import { UserModel } from "./app/models/User";
-import { LOGGER } from "./app/util/Logger";
-import Multify from "./multer";
 
 interface AuthenticatableRequest {
   user?: UserModel;
@@ -21,46 +16,36 @@ declare global {
   }
 }
 
-if (process.env.NODE_ENV !== "production") {
-  LoadDotenv();
-  LOGGER.add(
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    })
-  );
-}
+export default () => {
+  const app = express();
 
-const app = express();
+  app.use(cors());
+  app.use(json());
+  app.use(urlencoded({ extended: true }));
+  app.use(UserInjection());
+  app.use(AccessLog());
 
-app.use(cors());
-app.use(json());
-app.use(urlencoded({ extended: true }));
-app.use(UserInjection());
-app.use(AccessLog());
-
-console.log("-------------------------------------------------");
-Multify(app);
-Routes.forEach(({ path, httpMethod, handler }) => {
-  switch (httpMethod) {
-    case "GET":
-      app.get(path, handler);
-      break;
-    case "POST":
-      app.post(path, handler);
-      break;
-    case "DELETE":
-      app.delete(path, handler);
-      break;
-    case "PUT":
-      app.put(path, handler);
-      break;
-    case "PATCH":
-      app.patch(path, handler);
-      break;
-  }
+  Routes.forEach(({ path, httpMethod, middleware, handler }) => {
+    switch (httpMethod) {
+      case "GET":
+        app.get(path, ...(middleware || []), handler);
+        break;
+      case "POST":
+        app.post(path, ...(middleware || []), handler);
+        break;
+      case "DELETE":
+        app.delete(path, ...(middleware || []), handler);
+        break;
+      case "PUT":
+        app.put(path, ...(middleware || []), handler);
+        break;
+      case "PATCH":
+        app.patch(path, ...(middleware || []), handler);
+        break;
+    }
+    console.log("-------------------------------------------------");
+    console.log(`${httpMethod}: ${path}`);
+  });
   console.log("-------------------------------------------------");
-  console.log(`${httpMethod}: ${path}`);
-});
-console.log("-------------------------------------------------");
-
-export default app;
+  return app;
+};

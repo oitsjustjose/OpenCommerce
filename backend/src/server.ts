@@ -1,7 +1,8 @@
-import app from "./app";
+import BuildApp from "./app";
 import { LOGGER } from "./app/util/Logger";
 import ConnectDb from "./db";
 
+const app = BuildApp();
 ConnectDb();
 
 const port = process.env.PORT || 3000;
