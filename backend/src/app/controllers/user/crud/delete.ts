@@ -1,4 +1,3 @@
-import EmailValidator from "email-validator";
 import { Request, Response } from "express";
 import Users from "../../../models/User";
 import { LOGGER } from "../../../util/Logger";

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
+import ValidateEmail from "../../../email/templates/ValidateEmail";
 import Users from "../../../models/User";
 import { LOGGER } from "../../../util/Logger";
-import ValidateEmail from "../../../email/templates/ValidateEmail";
 
 export default async (req: Request, res: Response) => {
   try {
