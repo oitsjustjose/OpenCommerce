@@ -9,7 +9,7 @@ import Login from './pages/User/Login';
 import Register from './pages/User/Register';
 import Navbar from './global/components/Nav/Navbar';
 import AlertModal from './global/components/Modal/Alert';
-import Footer from './components/Footer';
+import Footer from './global/components/Footer';
 
 export const Pages = [
   {

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Products from "../../../models/Product";
+import Product from "../../../models/Product";
 import { LOGGER } from "../../../util/Logger";
 
 export default async (req: Request, res: Response) => {
@@ -8,7 +8,7 @@ export default async (req: Request, res: Response) => {
       return res.status(403).send();
     }
 
-    const tmp = new Products(req.body);
+    const tmp = new Product(req.body);
     await tmp.save();
     return res.status(200).json(tmp);
   } catch (ex) {
