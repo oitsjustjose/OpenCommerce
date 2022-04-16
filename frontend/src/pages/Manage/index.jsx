@@ -1,25 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   FormControl, Heading, Input, InputGroup, InputLeftAddon,
 } from '@chakra-ui/react';
 import CurrencyInput from 'react-currency-input-field';
 import { AiOutlineNumber } from 'react-icons/ai';
-import { MdPhotoLibrary, MdTextFields } from 'react-icons/md';
 import { BsCurrencyDollar } from 'react-icons/bs';
+import { MdTextFields } from 'react-icons/md';
 import IconTextDuo from '../../global/components/IconTextDuo';
 import store from '../../redux/store';
+import { FileUpload } from './components/FileUpload';
 
 const InputGroupStyle = {
   marginTop: '1rem',
   marginBottom: '1rem',
-};
-
-const initialState = {
-  name: '',
-  quantity: 0,
-  price: 0.0,
-  images: [],
 };
 
 const uploadImage = async (file) => {
@@ -27,13 +21,22 @@ const uploadImage = async (file) => {
   fd.append('file', file);
   const resp = await fetch('/api/v1/fileupload', { method: 'POST', body: fd });
   const { output, error } = await resp.json();
-  if (error) return null;
+  if (error) {
+    // eslint-disable-next-line no-console
+    error(error);
+    return null;
+  }
   return `/api/v1/fileupload/${output}`;
 };
 
 export default () => {
   const [loading, setLoading] = useState(false);
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState({
+    name: '',
+    quantity: 0,
+    price: 0.0,
+    images: [],
+  });
 
   const save = async () => {
     setLoading(true);
@@ -55,18 +58,27 @@ export default () => {
 
       const data = await resp.json();
       if (resp.ok) {
+        // Workaround for resetting this form as many custom inputs == VERY difficult to do
         // eslint-disable-next-line no-underscore-dangle
-        store.dispatch({ type: 'SET_ALERT', data: { header: 'Item Added!', content: `Item created with ID ${data._id}` } });
-        setState(initialState);
+        window.location.href = `${window.location.href}?_id=${data._id}`;
       } else {
-        store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Item', content: data.error } });
+        store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Item', content: JSON.stringify(data) } });
       }
     } catch (ex) {
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Item', content: ex } });
+      store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Item in Catch Block', content: ex } });
     }
-
     setLoading(false);
   };
+
+  // Workaround for resetting this form as many custom inputs == VERY difficult to do
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('_id')) {
+      store.dispatch({ type: 'SET_ALERT', data: { header: 'Item Added!', content: `Item created with ID ${params.get('_id')}` } });
+      window.history.replaceState(null, null, window.location.pathname);
+    }
+    return () => {};
+  }, []);
 
   return (
     <div>
@@ -122,14 +134,13 @@ export default () => {
         </InputGroup>
 
         <InputGroup style={InputGroupStyle}>
-          <InputLeftAddon backgroundColor="#53b0fb" color="black"><IconTextDuo icon={(<MdPhotoLibrary />)} text="Images" /></InputLeftAddon>
-          <Input
-            id="images"
-            type="file"
-            multiple
-            accept="image/*"
-            background="gray.50"
-            onChange={(evt) => setState({ ...state, images: Array.from(evt.target.files) })}
+          <FileUpload
+            name="image"
+            acceptedFileTypes="image/*"
+            required
+            allowMultipleFiles
+            propagateChange={(evt) => setState({ ...state, images: Array.from(evt.target.files) })}
+            style={{ cursor: 'pointer !important' }}
           />
         </InputGroup>
 
