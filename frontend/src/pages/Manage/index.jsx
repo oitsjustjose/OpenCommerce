@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Button,
-  FormControl, Heading, Input, InputGroup, InputLeftAddon,
+  Box, Button, FormControl, Heading, InputGroup, InputLeftAddon, Text,
 } from '@chakra-ui/react';
 import CurrencyInput from 'react-currency-input-field';
-import { AiOutlineNumber } from 'react-icons/ai';
+import { AiOutlineFileText, AiOutlineNumber } from 'react-icons/ai';
 import { BsCurrencyDollar } from 'react-icons/bs';
-import { MdTextFields } from 'react-icons/md';
+import InlineLabelInput from '../../global/components/FormControl/InlineLabelInput';
 import IconTextDuo from '../../global/components/IconTextDuo';
+import { Manage as i18n } from '../../global/i18n';
 import store from '../../redux/store';
 import { FileUpload } from './components/FileUpload';
 
@@ -23,7 +23,7 @@ const uploadImage = async (file) => {
   const { output, error } = await resp.json();
   if (error) {
     // eslint-disable-next-line no-console
-    error(error);
+    console.error(error);
     return null;
   }
   return `/api/v1/fileupload/${output}`;
@@ -33,13 +33,18 @@ export default () => {
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
     name: '',
-    quantity: 0,
-    price: 0.0,
+    quantity: null,
+    price: null,
     images: [],
   });
 
   const save = async () => {
     setLoading(true);
+    if (!state.name.length || !state.quantity || !state.price) {
+      store.dispatch({ type: 'SET_ALERT', data: { header: 'Missing Info', content: 'Not all required fields have been filled. Please provide this info to proceed.' } });
+      setLoading(false);
+      return;
+    }
     try {
       // Step 1: Upload image files
       const imageUrls = await Promise.all(state.images.map(uploadImage));
@@ -74,7 +79,7 @@ export default () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.has('_id')) {
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Item Added!', content: `Item created with ID ${params.get('_id')}` } });
+      store.dispatch({ type: 'SET_ALERT', data: { ...i18n.create.itemCreatedSuccess(params.get('_id')) } });
       window.history.replaceState(null, null, window.location.pathname);
     }
     return () => {};
@@ -82,78 +87,113 @@ export default () => {
 
   return (
     <div>
-      <Heading textAlign="center" marginBottom="1rem">Create Product</Heading>
+      <Heading textAlign="center" marginBottom="1rem">
+        {i18n.create.title}
+      </Heading>
 
-      <FormControl
-        onKeyPress={(e) => e.key === 'Enter' && save()}
-        onSubmit={save}
-        backgroundColor="gray.100"
+      <Box
+        borderRadius="2xl"
         padding="2rem"
-        borderRadius="8px"
-        maxW="50%"
+        backgroundColor="blackAlpha.200"
+        w="100%"
+        maxW="768px"
         margin="auto"
       >
-        <InputGroup style={InputGroupStyle}>
-          <InputLeftAddon backgroundColor="#fa6663" color="black"><IconTextDuo icon={(<MdTextFields />)} text="Name" /></InputLeftAddon>
-          <Input
-            id="name"
-            type="text"
-            required
-            value={state.name}
-            background="gray.50"
-            onChange={(e) => setState({ ...state, name: e.target.value })}
-          />
-        </InputGroup>
+        <InlineLabelInput
+          required
+          type="text"
+          propSubmitEvt={save}
+          propChangeEvt={(e) => setState({ ...state, name: e.target.value })}
+          propKeyPressEvt={(e) => e.key === 'Enter' && save()}
+          value={state.name}
+          labelText={i18n.create.labels.name}
+          labelIcon={(<AiOutlineFileText />)}
+          labelBgColor="#fa6663"
+          labelFgColor="black"
+          error={!state.name.length ? i18n.create.labels.required : null}
+        />
 
-        <InputGroup style={InputGroupStyle}>
-          <InputLeftAddon backgroundColor="#8a56c2" color="white"><IconTextDuo icon={(<AiOutlineNumber />)} text="Qty" /></InputLeftAddon>
-          {/* Use currency input to nicely handle whole numerical values */}
-          <CurrencyInput
-            prefix=""
-            defaultValue={state.quantity}
-            allowDecimals={false}
-            className="chakra-input currency"
-            onValueChange={(value) => setState({
-              ...state, quantity: JSON.parse(value),
-            })}
-          />
-        </InputGroup>
+        <FormControl
+          onSubmit={save}
+          onKeyPress={(e) => e.key === 'Enter' && save()}
+          isRequired
+          padding=".5rem"
+          borderRadius="8px"
+          margin="auto"
+        >
+          <InputGroup style={InputGroupStyle}>
+            <InputLeftAddon backgroundColor="#8a56c2" color="white">
+              <IconTextDuo icon={(<AiOutlineNumber />)} text="Qty" />
+            </InputLeftAddon>
+            {/* Use currency input to nicely handle whole numerical values */}
+            <CurrencyInput
+              prefix=""
+              allowDecimals={false}
+              className="chakra-input currency"
+              onValueChange={(value) => setState({
+                ...state, quantity: JSON.parse(value),
+              })}
+            />
+          </InputGroup>
+          <Text fontSize=".75rem" color="red.500">{!state.quantity ? i18n.create.labels.required : null}</Text>
+        </FormControl>
 
-        <InputGroup style={InputGroupStyle}>
-          <InputLeftAddon backgroundColor="#fbb355" color="black"><IconTextDuo icon={(<BsCurrencyDollar />)} text="Price" /></InputLeftAddon>
-          <CurrencyInput
-            prefix="$"
-            placeholder="Price"
-            defaultValue={state.price}
-            decimalsLimit={2}
-            className="chakra-input currency"
-            onValueChange={(value) => setState({
-              ...state, price: JSON.parse(value),
-            })}
-          />
-        </InputGroup>
-
-        <InputGroup style={InputGroupStyle}>
-          <FileUpload
-            name="image"
-            acceptedFileTypes="image/*"
-            required
-            allowMultipleFiles
-            propagateChange={(evt) => setState({ ...state, images: Array.from(evt.target.files) })}
-            style={{ cursor: 'pointer !important' }}
-          />
-        </InputGroup>
+        <FormControl
+          onSubmit={save}
+          onKeyPress={(e) => e.key === 'Enter' && save()}
+          isRequired
+          padding=".5rem"
+          borderRadius="8px"
+          margin="auto"
+        >
+          <InputGroup style={InputGroupStyle}>
+            <InputLeftAddon backgroundColor="#fbb355" color="black"><IconTextDuo icon={(<BsCurrencyDollar />)} text="Price" /></InputLeftAddon>
+            <CurrencyInput
+              prefix="$"
+              decimalsLimit={2}
+              className="chakra-input currency"
+              onValueChange={(value) => setState({
+                ...state, price: JSON.parse(value),
+              })}
+            />
+          </InputGroup>
+          <Text fontSize=".75rem" color="red.500">{!state.price ? i18n.create.labels.required : null}</Text>
+        </FormControl>
+        <FormControl
+          onSubmit={save}
+          onKeyPress={(e) => e.key === 'Enter' && save()}
+          isRequired
+          padding=".5rem"
+          borderRadius="8px"
+          margin="auto"
+        >
+          <InputGroup style={InputGroupStyle}>
+            <FileUpload
+              name="image"
+              acceptedFileTypes="image/*"
+              required
+              allowMultipleFiles
+              propagateChange={(evt) => setState({
+                ...state,
+                images: Array.from(evt.target.files),
+              })}
+            />
+          </InputGroup>
+          <Text fontSize=".75rem" color="red.500">{state.images.length === 0 ? i18n.create.labels.required : null}</Text>
+        </FormControl>
 
         <Button
+          display="block"
+          mx="auto"
           mt={4}
-          colorScheme="blue"
+          colorScheme="green"
           isLoading={loading}
           type="submit"
           onClick={save}
         >
-          Submit
+          {i18n.create.labels.save}
         </Button>
-      </FormControl>
+      </Box>
     </div>
   );
 };

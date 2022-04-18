@@ -13,10 +13,10 @@ const decodeAndDispatch = async (token) => {
       if (resp.status === 410 && window.localStorage.getItem('auth-token')) {
         window.localStorage.removeItem('auth-token');
       }
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Login Is Invalid', content: resp.error } });
+      window.location.href = '/login?invalidOrExpired=true';
     }
   } catch (ex) {
-    store.dispatch({ type: 'SET_ALERT', data: { header: 'Login Is Invalid', content: ex } });
+    window.location.href = '/login?invalidOrExpired=true';
   }
 };
 

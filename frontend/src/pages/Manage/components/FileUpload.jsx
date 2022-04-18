@@ -4,6 +4,7 @@ import {
   Input, InputGroup, InputLeftElement, Icon,
 } from '@chakra-ui/react';
 import { FiFile } from 'react-icons/fi';
+import { Manage as i18n } from '../../../global/i18n';
 
 export const FileUpload = ({
   name,
@@ -39,7 +40,8 @@ export const FileUpload = ({
         placeholder={placeholder || 'Your file ...'}
         onClick={() => inputRef.current.click()}
         readOnly
-        value={`${files.length || 'No'} ${files.length === 1 ? 'File' : 'Files'} Selected`}
+        background="blue.300"
+        value={i18n.create.fileUpload(files.length)}
       />
     </InputGroup>
   );

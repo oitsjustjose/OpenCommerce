@@ -1,22 +1,47 @@
-/* eslint-disable max-len */
-import React from 'react';
-import { Heading, Text } from '@chakra-ui/react';
+/* eslint-disable no-underscore-dangle */
+import React, { useState, useEffect } from 'react';
+import { Heading, Grid, GridItem } from '@chakra-ui/react';
 import { connect } from 'react-redux';
+import store from '../../redux/store';
+import Card from './components/Card';
+import { Home as i18n } from '../../global/i18n';
 
-const Home = ({ user }) => (
-  <div>
-    <Heading textAlign="center">
-      Hello
-      {' '}
-      {user?.first}
-      !
-    </Heading>
+const Home = ({ user }) => {
+  const [products, setProducts] = useState([]);
 
-    <Text>
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum itaque hic pariatur ad voluptates possimus amet nostrum officia, nesciunt voluptatem. Eligendi reprehenderit explicabo, illo dolores, nemo minus facere voluptatibus eius fugit odit similique eum ullam. Assumenda reprehenderit hic nesciunt amet soluta? Aliquid accusamus architecto itaque ex, quibusdam suscipit libero voluptate eos pariatur, laudantium nulla inventore placeat. Sunt ex ut repudiandae architecto aspernatur quas, explicabo ipsa? Eligendi provident aperiam rem officiis quam dignissimos neque culpa a beatae iusto recusandae quaerat facilis, quidem, veritatis iste consectetur, est pariatur maxime repudiandae ipsa fugiat reiciendis rerum repellat voluptatum. Nihil laborum quisquam, omnis maiores, excepturi asperiores repellat repudiandae error voluptatem corporis tenetur! Non totam asperiores nam commodi suscipit. At animi unde aperiam deleniti ratione provident, fugit quam sunt error quis ad vitae reprehenderit! Mollitia soluta excepturi aspernatur iste reprehenderit, unde quidem necessitatibus animi. Veritatis, voluptatibus ullam autem, perspiciatis sequi debitis sunt, reiciendis placeat quasi perferendis quia exercitationem corporis. Minima consequatur a recusandae veniam explicabo, nihil praesentium doloribus, sapiente nulla totam aliquid corrupti quod. Obcaecati facilis vitae quia soluta consequuntur atque sed veniam ducimus exercitationem illo, numquam officia. Numquam, quae! Pariatur error alias ipsum ad, est harum animi nesciunt. Voluptatibus, cum illum modi rerum mollitia, consequuntur repudiandae voluptatum repellendus, dolorum eum harum neque exercitationem velit repellat. Repudiandae hic similique deleniti et. Nihil qui architecto quasi assumenda explicabo quas eius, odit aspernatur repellendus a veniam? Nesciunt, minima amet illum eligendi voluptate et maiores magnam, possimus corrupti, est voluptatem odit architecto culpa. Culpa sed omnis nobis in deleniti, corrupti minima repellendus non repudiandae qui dolorum numquam? A eos cumque doloremque, consequuntur maiores numquam adipisci obcaecati minima labore odio consectetur, magni ea in veritatis magnam, iusto quidem maxime! Accusantium possimus quia nisi corrupti amet! Neque autem quaerat harum eveniet libero et nemo illo porro quis itaque corporis fugiat facilis, nesciunt possimus tempore. Porro odit, voluptatum sapiente eveniet deleniti ex illum a! Ipsam earum, incidunt expedita provident nulla distinctio quaerat aliquam culpa repellendus vitae ipsum quae pariatur tempore placeat saepe sint quisquam inventore quasi ratione eum error esse maiores? Eveniet reprehenderit cupiditate veniam, dolorum dignissimos earum molestiae, asperiores fugiat magnam fugit accusamus, eum neque architecto error deserunt ipsum excepturi. Vel debitis laborum, fuga mollitia nesciunt necessitatibus architecto commodi quas exercitationem, alias odit consectetur eaque quaerat at dicta. Numquam quae sunt aliquid, dicta maiores doloremque, quos inventore esse facere excepturi porro, dolorem at eveniet assumenda eos minus iure voluptate ab incidunt odio illo tenetur asperiores deserunt. Eum eligendi dolorem ex labore earum molestias aspernatur, nostrum veniam tempora odio at nesciunt officia provident sit excepturi, deleniti pariatur ipsam harum quia? Soluta quam quas sit accusantium commodi! Dolor aperiam voluptatibus quos aspernatur a. Magni, quas dolor. Maxime molestias adipisci iste cumque quibusdam. Accusantium optio voluptate maxime facilis aspernatur odio blanditiis maiores, eius ad architecto reprehenderit quos iure facere, commodi quisquam labore, ullam itaque excepturi dolores ipsa eveniet incidunt deleniti ratione ut. Eveniet magnam provident, cupiditate, nisi ab porro temporibus mollitia, architecto dicta qui totam! Repellat, aliquid commodi. Unde vel esse accusamus velit omnis possimus, ducimus perspiciatis nobis necessitatibus corporis doloremque rem. Iste necessitatibus asperiores, rem excepturi illum ad repellat eveniet autem animi reiciendis veniam facere consectetur vel quis debitis, dolorem, placeat eius non! Quia doloremque nam a pariatur?
-    </Text>
-  </div>
-);
+  useEffect(() => {
+    (async () => {
+      const resp = await fetch('/api/v1/products');
+      const data = await resp.json();
+      if (resp.ok) {
+        setProducts(data);
+      } else {
+        store.dispatch({ type: 'SET_ALERT', data: { header: i18n.downloadFailedAlert.header, content: JSON.stringify(data.error) } });
+      }
+    })();
+
+    return () => {};
+  }, [products, setProducts]);
+
+  return (
+    <div>
+      <Heading textAlign="center">
+        Hello
+        {' '}
+        {user?.first}
+        !
+      </Heading>
+
+      <Grid templateColumns="repeat(auto-fit, minmax(384px, 1fr));" rowGap={6}>
+        {products.map((x) => (
+          <GridItem key={x._id}>
+            <Card product={x} />
+          </GridItem>
+        ))}
+      </Grid>
+    </div>
+  );
+};
 
 const mapStateToProps = ({ user }) => ({ user });
 export default connect(mapStateToProps)(Home);

@@ -1,4 +1,5 @@
 import React from 'react';
+import { MdAdminPanelSettings } from 'react-icons/md';
 import { FaShoppingBag } from 'react-icons/fa';
 import { BrowserRouter, Routes as RouterRoutes, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -23,7 +24,7 @@ export const Pages = [
   {
     name: 'Manage',
     path: '/manage',
-    icon: null,
+    icon: (<MdAdminPanelSettings />),
     element: (<Manage />),
     adminOnly: true,
     hidden: false,

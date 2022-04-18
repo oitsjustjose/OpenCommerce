@@ -5,6 +5,7 @@ import {
 } from '@chakra-ui/react';
 import { connect } from 'react-redux';
 import store from '../../../redux/store';
+import { General as i18n } from '../../i18n';
 
 const AlertModal = ({
   open, header, content,
@@ -20,7 +21,7 @@ const AlertModal = ({
 
       <ModalFooter>
         <Button colorScheme="blue" mr={3} onClick={() => store.dispatch({ type: 'SET_ALERT', data: null })}>
-          Close
+          {i18n.close}
         </Button>
       </ModalFooter>
     </ModalContent>
