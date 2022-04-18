@@ -68,7 +68,6 @@ const NavBar = ({ user }) => {
             {!user && (
             <Button
               onClick={() => navigate('/login', { replace: true })}
-              icon={MdLogin}
               colorScheme={location.pathname === '/login' ? 'blue' : 'gray'}
             >
               <IconTextDuo icon={(<MdLogin />)} text={i18n.login} />
