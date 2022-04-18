@@ -4,3 +4,4 @@ icloud.js
 combined.log
 error.log
 node_modules
+.envrc
