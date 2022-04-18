@@ -21,6 +21,21 @@ export default async (req: Request, res: Response) => {
       .json({ error: `Product with id ${req.params.id} could not be located` });
   }
 
+  const reviewsFromUser = product.reviews.filter((x) =>
+    x.user._id.equals(req.user._id)
+  ).length;
+  if (!!reviewsFromUser) {
+    return res
+      .status(422)
+      .json({ error: "You've already left a review for this product" });
+  }
+
+  if (req.body.rating < 0 || req.body.rating > 5.0) {
+    return res
+      .status(422)
+      .json({ error: "Ratings must be between 0.0 and 5.0" });
+  }
+
   product.reviews = [
     ...product.reviews,
     {

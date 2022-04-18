@@ -37,6 +37,12 @@ export default async (req: Request, res: Response) => {
     return res.status(403).json({ error: "Review isn't yours" });
   }
 
+  if (req.body.rating < 0 || req.body.rating > 5.0) {
+    return res
+      .status(422)
+      .json({ error: "Ratings must be between 0.0 and 5.0" });
+  }
+
   rev.rating = req.body.rating || rev.rating;
   rev.review.title = req.body.review?.title || rev.review.title;
   rev.review.body = req.body.review?.body || rev.review.body;

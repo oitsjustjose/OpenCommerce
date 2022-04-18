@@ -11,12 +11,20 @@ export default async (req: Request, res: Response) => {
     }
 
     const product = await Products.findById(req.params.id);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ error: `No product with ID ${req.params.id} was found.` });
+    }
 
-    return !!product
-      ? res.status(200).json(product)
-      : res
-          .status(404)
-          .json({ error: `No product with ID ${req.params.id} was found.` });
+    return res.status(200).json({
+      ...product.toJSON(),
+      overallRating: product.reviews.length
+        ? product.reviews
+            .map((x) => x.rating)
+            .reduce((prev, curr) => prev + curr) / product.reviews.length
+        : null,
+    });
   } catch (ex) {
     LOGGER.error(ex);
     return res.status(500).json({ error: ex });

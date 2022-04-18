@@ -6,7 +6,9 @@ import {
   Text,
   Stack,
   Image,
+  Flex,
 } from '@chakra-ui/react';
+import { BsStarFill, BsStarHalf } from 'react-icons/bs';
 
 export default ({ product }) => {
   const filtered = product.images.filter((x) => !!x);
@@ -41,6 +43,16 @@ export default ({ product }) => {
         />
       </Box>
       <Stack p={6} align="center">
+        <Flex>
+          { product.overallRating
+        && new Array(Math.floor(product.overallRating)).fill('').map((x, idx) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <BsStarFill key={`${product.name}-star-${idx}`} />
+        ))}
+          {product.overallRating
+          && product.overallRating - Math.floor(product.overallRating) >= 0.5
+          && (<BsStarHalf />)}
+        </Flex>
         <Heading fontSize="2xl" fontFamily="body" fontWeight={500}>
           {product.name}
         </Heading>
