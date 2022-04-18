@@ -9,7 +9,8 @@ import {
 } from '@chakra-ui/react';
 
 export default ({ product }) => {
-  const images = product.images.filter((x) => !!x) || ['https://dv2ls.com/f/PpMcVb8gN'];
+  const filtered = product.images.filter((x) => !!x);
+  const images = filtered.length ? filtered : ['https://dv2ls.com/f/PpMcVb8gN'];
   return (
     <Box
       margin="auto"
