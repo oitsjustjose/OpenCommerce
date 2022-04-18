@@ -5,6 +5,10 @@ import get from "./crud/get";
 import list from "./crud/list";
 import update from "./crud/update";
 
+import rupdate from "./reviews/update";
+import rcreate from "./reviews/create";
+import rdel from "./reviews/delete";
+
 const routes: RouteCollection[] = [
   {
     httpMethod: "GET",
@@ -30,6 +34,21 @@ const routes: RouteCollection[] = [
     httpMethod: "DELETE",
     path: "/api/v1/products/:id",
     handler: del,
+  },
+  {
+    httpMethod: "PUT",
+    path: "/api/v1/products/:id/reviews",
+    handler: rcreate,
+  },
+  {
+    httpMethod: "PATCH",
+    path: "/api/v1/products/:id/reviews/:revId",
+    handler: rupdate,
+  },
+  {
+    httpMethod: "DELETE",
+    path: "/api/v1/products/:id/reviews/:revId",
+    handler: rdel,
   },
 ];
 
