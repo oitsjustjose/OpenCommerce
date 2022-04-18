@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import ProductRoutes from "./product";
-import ReviewRoutes from "./review";
 import UserRoutes from "./user";
 import S3Routes from "./s3";
 
@@ -14,7 +13,6 @@ export type RouteCollection = {
 const routes: RouteCollection[] = [
   ...ProductRoutes,
   ...UserRoutes,
-  ...ReviewRoutes,
   ...S3Routes,
 ];
 
