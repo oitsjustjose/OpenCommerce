@@ -179,7 +179,6 @@ export default () => {
               })}
             />
           </InputGroup>
-          <Text fontSize=".75rem" color="red.500">{state.images.length === 0 ? i18n.create.labels.required : null}</Text>
         </FormControl>
 
         <Button
