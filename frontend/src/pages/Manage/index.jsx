@@ -57,7 +57,7 @@ export default () => {
         },
         body: JSON.stringify({
           ...state,
-          images: imageUrls,
+          images: imageUrls.length ? imageUrls : ['https://dv2ls.com/f/PpMcVb8gN'],
         }),
       });
 
