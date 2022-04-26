@@ -12,7 +12,18 @@ import InlineLabelInput from '../../global/components/FormControl/InlineLabelInp
 
 export default () => {
   const [hasLoaded, setLoaded] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
+
+  const doSearch = (evt) => {
+    const terms = evt.target.value.toLowerCase();
+    if (terms.length) {
+      const filtered = products.filter((x) => x.name.toLowerCase().includes(terms));
+      setProducts(filtered);
+    } else {
+      setProducts(allProducts);
+    }
+  };
 
   useEffect(() => {
     if (hasLoaded) return () => {};
@@ -22,6 +33,7 @@ export default () => {
       const data = await resp.json();
       if (resp.ok) {
         setProductsPt(data);
+        setAllProducts(data);
         setLoadedPt(true);
       } else {
         store.dispatch({ type: 'SET_ALERT', data: { header: i18n.downloadFailedAlert.header, content: JSON.stringify(data.error) } });
@@ -30,7 +42,7 @@ export default () => {
 
     _(setProducts, setLoaded);
     return () => {};
-  }, [hasLoaded, setLoaded, setProducts]);
+  }, [hasLoaded, setLoaded, setProducts, setAllProducts]);
 
   if (!hasLoaded) {
     return (<Loading />);
@@ -43,7 +55,7 @@ export default () => {
       </Heading>
       <Box maxW="400px" m="auto">
         <InlineLabelInput
-          propChangeEvt={() => {}}
+          propChangeEvt={doSearch}
           propKeyPressEvt={() => {}}
           propSubmitEvt={() => {}}
           type="text"

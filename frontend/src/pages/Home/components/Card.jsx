@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import {
   Box,
@@ -9,10 +10,13 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import { BsStarFill, BsStarHalf } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 
 export default ({ product }) => {
   const filtered = product.images.filter((x) => !!x);
   const images = filtered.length ? filtered : ['https://dv2ls.com/f/PpMcVb8gN'];
+  const nav = useNavigate();
+
   return (
     <Box
       margin="auto"
@@ -25,6 +29,7 @@ export default ({ product }) => {
       rounded="lg"
       pos="relative"
       zIndex={1}
+      onClick={() => nav(`/product?productId=${product._id}`, { replace: true })}
       _hover={{
         transition: 'all .3s ease',
         boxShadow: 'var(--chakra-shadows-2xl)',

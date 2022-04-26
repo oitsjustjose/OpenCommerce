@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Products from "../../../models/Product";
 import { LOGGER } from "../../../util/Logger";
+import { Types } from "mongoose";
 
 export default async (req: Request, res: Response) => {
   try {
@@ -10,7 +11,7 @@ export default async (req: Request, res: Response) => {
         .json({ error: "Request is missing Parameter 'id'" });
     }
 
-    const product = await Products.findById(req.params.id);
+    const product = await Products.findById(new Types.ObjectId(req.params.id));
     if (!product) {
       return res
         .status(404)

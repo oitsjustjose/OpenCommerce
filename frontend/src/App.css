@@ -60,3 +60,7 @@ body.chakra-ui-dark .chakra-input.currency {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
+
+.slider-wrapper.axis-horizontal {
+  border-radius: 8px;
+}

@@ -15,6 +15,7 @@ export type Review = Document & {
 
 export type ProductModel = Document & {
   name: string;
+  description: string;
   quantity: number;
   price: number;
   images: string[];
@@ -40,6 +41,10 @@ const ReviewSchema = new Schema<Review>({
 
 const ProductSchema = new Schema<ProductModel>({
   name: {
+    type: String,
+    required: true,
+  },
+  description: {
     type: String,
     required: true,
   },

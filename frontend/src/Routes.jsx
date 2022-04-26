@@ -5,6 +5,7 @@ import { BrowserRouter, Routes as RouterRoutes, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import FakeNavItem from './global/components/Nav/FakeNavItem';
 import Home from './pages/Home/index';
+import Product from './pages/Product/index';
 import Manage from './pages/Manage/index';
 import Login from './pages/User/Login';
 import Register from './pages/User/Register';
@@ -50,6 +51,14 @@ export const Pages = [
     path: '/register',
     icon: null,
     element: (<Register />),
+    adminOnly: false,
+    hidden: true,
+  },
+  {
+    name: 'Product',
+    path: '/product',
+    icon: null,
+    element: (<Product />),
     adminOnly: false,
     hidden: true,
   },

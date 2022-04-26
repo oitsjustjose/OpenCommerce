@@ -23,6 +23,14 @@ export const Home = new LocalizedStrings({
   },
 });
 
+export const Product = new LocalizedStrings({
+  en: {
+    downloadFailedAlert: {
+      header: 'Failed to Get Product Details',
+    },
+  },
+});
+
 export const Manage = new LocalizedStrings({
   en: {
     create: {
@@ -34,6 +42,7 @@ export const Manage = new LocalizedStrings({
       }),
       labels: {
         name: 'Name',
+        desc: 'Description (Supports Markdown)',
         price: 'Price',
         qty: 'Quantity',
         required: 'This Field is Required',

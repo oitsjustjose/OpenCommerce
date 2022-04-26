@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Button, FormControl, Heading, InputGroup, InputLeftAddon, Text,
+  Box, Button, FormControl, FormLabel, Heading,
+  InputGroup, InputLeftAddon, Text, Textarea, useColorModeValue,
 } from '@chakra-ui/react';
 import CurrencyInput from 'react-currency-input-field';
 import { AiOutlineFileText, AiOutlineNumber } from 'react-icons/ai';
@@ -33,6 +34,7 @@ export default () => {
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
     name: '',
+    description: '',
     quantity: null,
     price: null,
     images: [],
@@ -112,6 +114,31 @@ export default () => {
           labelFgColor="black"
           error={!state.name.length ? i18n.create.labels.required : null}
         />
+
+        <FormControl
+          onSubmit={() => {}}
+          padding="0.5rem"
+          borderRadius="8px"
+          margin="auto"
+          variant="floating"
+        >
+          <Textarea
+            id="manage-text-area"
+            value={state.description}
+            onChange={(e) => setState({ ...state, description: e.target.value })}
+            background={useColorModeValue('gray.50', 'gray.700')}
+            resize="vertical"
+            size="md"
+          />
+
+          {state.description.length === 0 && (
+          <FormLabel background="green.400" borderTopLeftRadius="8px" px={2} py={1}>
+            <IconTextDuo icon={(<AiOutlineFileText />)} text={i18n.create.labels.desc} />
+          </FormLabel>
+          )}
+
+          <Text fontSize=".75rem" color="red.500">{!state.description.length ? i18n.create.labels.required : null}</Text>
+        </FormControl>
 
         <FormControl
           onSubmit={save}
