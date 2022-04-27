@@ -22,11 +22,12 @@ export default async (req: Request, res: Response) => {
         .json({ error: `No such product with ID ${req.params.id} found` });
     }
 
-    product.quantity = req.body.quantity || product.quantity;
-    product.price = req.body.price || product.price;
-    product.hidden = req.body.hidden || product.hidden;
-    product.description = req.body.description || product.description;
-    product.images = req.body.images || product.images;
+    req.body.name && (product.name = req.body.name);
+    req.body.description && (product.description = req.body.description);
+    req.body.quantity && (product.quantity = req.body.quantity);
+    req.body.price && (product.price = req.body.price);
+    req.body.images && (product.images = req.body.images);
+    req.body.hidden && (product.hidden = req.body.hidden);
 
     await product.save();
     return res.status(200).json(product);

@@ -5,6 +5,7 @@ export const General = new LocalizedStrings({
     yes: 'Yes',
     no: 'No',
     close: 'Close',
+    cancel: 'Cancel',
     save: 'Save',
     openMenu: 'Open Menu',
     login: 'Log In',

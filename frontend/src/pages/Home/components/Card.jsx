@@ -13,7 +13,7 @@ import { BsStarFill, BsStarHalf } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
 export default ({ product }) => {
-  const filtered = product.images.filter((x) => !!x);
+  const filtered = product.images.filter((x) => x !== null);
   const images = filtered.length ? filtered : ['https://dv2ls.com/f/PpMcVb8gN'];
   const nav = useNavigate();
 

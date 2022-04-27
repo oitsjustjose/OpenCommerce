@@ -12,6 +12,7 @@ import Carousel from './components/Carousel';
 export default () => {
   const [product, setProduct] = useState(null);
   const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
 
   useEffect(() => {
     if (loaded) return () => {};
@@ -20,7 +21,7 @@ export default () => {
       const params = new URLSearchParams(window.location.search);
       if (!params.has('productId')) {
         store.dispatch({ type: 'SET_ALERT', data: { header: i18n.downloadFailedAlert.header, content: 'URL is invalid as it\'s missing the Product ID' } });
-        setLoadedPt(true);
+        setErrored(true);
         return;
       }
 
@@ -39,16 +40,26 @@ export default () => {
     return () => {};
   }, [setProduct, loaded, setLoaded]);
 
-  if (!loaded) {
+  if (errored) {
+    return <div />;
+  }
+
+  if (!errored && !loaded) {
     return (<Loading />);
   }
 
   return (
     <div style={{ maxWidth: '768px', margin: 'auto' }}>
       <Heading textAlign="center" mb={4}>{product.name}</Heading>
-      {product.images && product.images.length && (
+      {(product.images && product.images.length) ? (
         <Carousel photos={product.images} />
+      ) : (
+        <Heading textAlign="center" size="md">
+          (No Photos Available)
+        </Heading>
       )}
+
+      <hr style={{ margin: '2rem auto' }} />
 
       <Box my={2} mx="auto" display="block" textAlign="center">
         <Heading my={2} size="md">
@@ -62,7 +73,7 @@ export default () => {
         </Button>
       </Box>
 
-      <hr />
+      <hr style={{ margin: '2rem auto' }} />
 
       <div>
         <Heading my={3}>Description</Heading>

@@ -11,4 +11,7 @@ export const uploadImage = async (file) => {
   return `/api/v1/fileupload/${output}`;
 };
 
-export default uploadImage;
+export const getAuthHeaders = () => ({
+  authorization: `Bearer ${window.localStorage.getItem('auth-token')}`,
+  'Content-Type': 'application/json',
+});

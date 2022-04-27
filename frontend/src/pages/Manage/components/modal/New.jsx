@@ -11,14 +11,14 @@ import IconTextDuo from '../../../../global/components/IconTextDuo';
 import { Manage as i18n } from '../../../../global/i18n';
 import store from '../../../../redux/store';
 import FileUpload from '../FileUpload';
-import { uploadImage } from '../../../../global/api';
+import { getAuthHeaders, uploadImage } from '../../../../global/api';
 
 const InputGroupStyle = {
   marginTop: '1rem',
   marginBottom: '1rem',
 };
 
-export default () => {
+export default ({ closeModal }) => {
   const [loading, setLoading] = useState(false);
   const [state, setState] = useState({
     name: '',
@@ -33,34 +33,29 @@ export default () => {
     if (!state.name.length || !state.quantity || !state.price || !state.description) {
       store.dispatch({ type: 'SET_ALERT', data: { header: 'Missing Info', content: 'Not all required fields have been filled. Please provide this info to proceed.' } });
       setLoading(false);
-      return;
+      return false;
     }
+
     try {
-      // Step 1: Upload image files
       const imageUrls = await Promise.all(state.images.map(uploadImage));
-      // Step 2: Upload the rest
       const resp = await fetch('/api/v1/products', {
         method: 'PUT',
-        headers: {
-          authorization: `Bearer ${window.localStorage.getItem('auth-token')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...state,
-          images: imageUrls.length ? imageUrls : ['https://dv2ls.com/f/PpMcVb8gN'],
-        }),
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ ...state, images: imageUrls }),
       });
 
       const data = await resp.json();
       if (resp.ok) {
         store.dispatch({ type: 'SET_ALERT', data: { header: 'Added New Product!', content: 'Your New Product has Been Saved and Will Be Reflected on the Management Page' } });
-      } else {
-        store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Product', content: JSON.stringify(data) } });
+        setLoading(false);
+        return true;
       }
+      store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Product', content: JSON.stringify(data) } });
     } catch (ex) {
       store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Product', content: ex } });
     }
     setLoading(false);
+    return false;
   };
 
   return (
@@ -80,9 +75,9 @@ export default () => {
         <InlineLabelInput
           required
           type="text"
-          propSubmitEvt={save}
+          propSubmitEvt={() => {}}
+          propKeyPressEvt={() => {}}
           propChangeEvt={(e) => setState({ ...state, name: e.target.value })}
-          propKeyPressEvt={(e) => e.key === 'Enter' && save()}
           value={state.name}
           labelText={i18n.labels.name}
           labelIcon={(<AiOutlineFileText />)}
@@ -105,20 +100,20 @@ export default () => {
             background={useColorModeValue('gray.50', 'gray.700')}
             resize="vertical"
             size="md"
+            paddingTop="32px"
+            transition="padding ease-in-out 150ms"
           />
 
-          {state.description.length === 0 && (
           <FormLabel background="green.400" borderTopLeftRadius="8px" px={2} py={1}>
             <IconTextDuo icon={(<BsMarkdown />)} text={i18n.labels.desc} />
           </FormLabel>
-          )}
 
           <Text fontSize=".75rem" color="red.500">{!state.description.length ? i18n.labels.required : null}</Text>
         </FormControl>
 
         <FormControl
-          onSubmit={save}
-          onKeyPress={(e) => e.key === 'Enter' && save()}
+          onSubmit={() => {}}
+          onKeyPress={() => {}}
           isRequired
           padding=".5rem"
           borderRadius="8px"
@@ -142,8 +137,8 @@ export default () => {
         </FormControl>
 
         <FormControl
-          onSubmit={save}
-          onKeyPress={(e) => e.key === 'Enter' && save()}
+          onSubmit={() => {}}
+          onKeyPress={() => {}}
           isRequired
           padding=".5rem"
           borderRadius="8px"
@@ -163,8 +158,8 @@ export default () => {
           <Text fontSize=".75rem" color="red.500">{!state.price ? i18n.labels.required : null}</Text>
         </FormControl>
         <FormControl
-          onSubmit={save}
-          onKeyPress={(e) => e.key === 'Enter' && save()}
+          onSubmit={() => {}}
+          onKeyPress={() => {}}
           isRequired
           padding=".5rem"
           borderRadius="8px"
@@ -191,7 +186,7 @@ export default () => {
           colorScheme="green"
           isLoading={loading}
           type="submit"
-          onClick={save}
+          onClick={() => save().then((x) => { if (x) closeModal(); })}
         >
           {i18n.labels.save}
         </Button>

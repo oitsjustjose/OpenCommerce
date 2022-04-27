@@ -24,6 +24,9 @@ const theme = extendTheme({
               label: {
                 ...activeLabelStyles,
               },
+              textarea: {
+                paddingTop: 0,
+              },
             },
             'input:not(:placeholder-shown) + label, .chakra-select__wrapper + label':
               {

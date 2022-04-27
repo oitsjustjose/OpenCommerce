@@ -3,7 +3,7 @@ import {
   Table, Thead, Tbody, Tr, Th, Td, TableContainer, Box, Button, Flex,
 } from '@chakra-ui/react';
 import { BiSearchAlt2 } from 'react-icons/bi';
-import { Manage as i18n, General } from '../../global/i18n';
+import { Manage as i18n } from '../../global/i18n';
 import Loading from '../../global/components/Loading';
 import store from '../../redux/store';
 import InlineLabelInput from '../../global/components/FormControl/InlineLabelInput';
@@ -72,10 +72,8 @@ export default () => {
           <Thead>
             <Tr>
               <Th>{i18n.labels.name}</Th>
-              <Th>{i18n.labels.desc}</Th>
               <Th>{i18n.labels.price}</Th>
               <Th>{i18n.labels.qty}</Th>
-              <Th>{i18n.labels.hidden}</Th>
               <Th>{i18n.labels.rating}</Th>
             </Tr>
           </Thead>
@@ -88,16 +86,8 @@ export default () => {
                 key={x.name}
               >
                 <Td>{x.name}</Td>
-                <Td>
-                  {x.description?.substring(0, 24)}
-                  ...
-                </Td>
-                <Td>
-                  $
-                  {x.price}
-                </Td>
+                <Td>{`$${x.price}`}</Td>
                 <Td>{x.quantity}</Td>
-                <Td>{x.hidden ? General.yes : General.no}</Td>
                 <Td>{x.overallRating || 'No Reviews'}</Td>
               </Tr>
             ))}
@@ -108,25 +98,27 @@ export default () => {
       <DynamicModal
         open={newModal}
         header={i18n.create.title}
-        superOnClose={() => {
-          setNewModal(false);
-          init(setProducts, setLoaded, setAllProducts);
-        }}
+        superOnClose={() => setNewModal(false)}
         size="3xl"
       >
-        <New />
+        <New closeModal={() => {
+          init(setProducts, setLoaded, setAllProducts).then(() => setNewModal(false));
+        }}
+        />
       </DynamicModal>
 
       <DynamicModal
         open={!!editItem}
         header={i18n.edit.title(editItem?.name)}
-        superOnClose={() => {
-          setEditItem(null);
-          init(setProducts, setLoaded, setAllProducts);
-        }}
+        superOnClose={() => setEditItem(null)}
         size="3xl"
       >
-        <Edit product={editItem} />
+        <Edit
+          product={editItem}
+          closeModal={() => {
+            init(setProducts, setLoaded, setAllProducts).then(() => setEditItem(null));
+          }}
+        />
       </DynamicModal>
     </div>
   );
