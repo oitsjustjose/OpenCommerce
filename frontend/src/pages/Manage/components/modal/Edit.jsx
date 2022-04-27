@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, ButtonGroup, FormControl, FormLabel, Grid, GridItem, Heading,
-  InputGroup, InputLeftAddon, Text, Textarea, useColorModeValue,
+  Box, Button, ButtonGroup, FormControl, Grid, GridItem, Heading,
+  InputGroup, InputLeftAddon, Text,
 } from '@chakra-ui/react';
 import CurrencyInput from 'react-currency-input-field';
+import ReactMde from 'react-mde';
 import { AiOutlineFileText, AiOutlineNumber } from 'react-icons/ai';
-import { BsCurrencyDollar, BsMarkdown } from 'react-icons/bs';
+import { BsCurrencyDollar } from 'react-icons/bs';
 import InlineLabelInput from '../../../../global/components/FormControl/InlineLabelInput';
 import IconTextDuo from '../../../../global/components/IconTextDuo';
 import { Manage as i18n } from '../../../../global/i18n';
@@ -14,6 +15,7 @@ import FileUpload from '../FileUpload';
 import DeletableImage from '../DeletableImage';
 import { getAuthHeaders, uploadImage } from '../../../../global/api';
 import { setToast } from '../../../../global/toast';
+import Markdown from '../../../../global/components/Markdown';
 
 const InputGroupStyle = {
   marginTop: '1rem',
@@ -22,6 +24,7 @@ const InputGroupStyle = {
 
 export default ({ product, closeModal }) => {
   const [loading, setLoading] = useState(false);
+  const [mdeTab, setMdeTab] = useState('write');
   const [state, setState] = useState({
     name: product.name,
     description: product.description,
@@ -106,31 +109,6 @@ export default ({ product, closeModal }) => {
 
         <FormControl
           onSubmit={() => {}}
-          padding="0.5rem"
-          borderRadius="8px"
-          margin="auto"
-          variant="floating"
-        >
-          <Textarea
-            id="manage-text-area"
-            value={state.description}
-            onChange={(e) => setState({ ...state, description: e.target.value })}
-            background={useColorModeValue('gray.50', 'gray.700')}
-            resize="vertical"
-            size="md"
-            paddingTop="32px"
-            transition="padding ease-in-out 150ms"
-          />
-
-          <FormLabel background="green.400" borderTopLeftRadius="8px" px={2} py={1}>
-            <IconTextDuo icon={(<BsMarkdown />)} text={i18n.labels.desc} />
-          </FormLabel>
-
-          <Text fontSize=".75rem" color="red.500">{!state.description.length ? i18n.labels.required : null}</Text>
-        </FormControl>
-
-        <FormControl
-          onSubmit={() => {}}
           onKeyPress={() => {}}
           isRequired
           padding=".5rem"
@@ -179,6 +157,22 @@ export default ({ product, closeModal }) => {
           </InputGroup>
           <Text fontSize=".75rem" color="red.500">{!state.price ? i18n.labels.required : null}</Text>
         </FormControl>
+
+        <div style={{ padding: '0.5rem' }}>
+          <Heading pb={3} size="md">{i18n.labels.desc}</Heading>
+
+          <ReactMde
+            value={state.description}
+            onChange={(x) => setState({ ...state, description: x })}
+            selectedTab={mdeTab}
+            onTabChange={setMdeTab}
+            generateMarkdownPreview={(md) => Promise.resolve(<Markdown>{md}</Markdown>)}
+            childProps={{ writeButton: { tabIndex: -1 } }}
+          />
+
+          <Text fontSize=".75rem" color="red.500">{!state.description ? i18n.labels.required : null}</Text>
+        </div>
+
         <FormControl
           onSubmit={() => {}}
           onKeyPress={() => {}}

@@ -32,6 +32,37 @@ body.chakra-ui-dark .chakra-input.currency {
   color: var(--chakra-colors-white);
 }
 
+body.chakra-ui-dark .mde-header {
+  background: var(--chakra-colors-gray-700);
+  color: var(--chakra-colors-white);
+}
+
+body.chakra-ui-dark .react-mde.react-mde-tabbed-layout {
+  border: 1px solid var(--chakra-colors-whiteAlpha-300);
+}
+
+body.chakra-ui-dark .react-mde textarea {
+  background: var(--chakra-colors-gray-700);
+  color: var(--chakra-colors-white);
+}
+
+.mde-tabs button {
+  padding: 0.5rem 1rem;
+}
+
+body.chakra-ui-dark .mde-header-item button {
+  color: var(--chakra-colors-white) !important;
+}
+
+body.chakra-ui-dark .mde-tabs button {
+  background: var(--chakra-colors-gray-600);
+  color: var(--chakra-colors-white) !important;
+}
+
+.mde-preview .mde-preview-content pre {
+  background-color: transparent !important;
+}
+
 .chakra-input.currency {
   width: 100%;
   min-width: 0px;

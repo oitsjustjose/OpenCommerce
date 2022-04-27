@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
 import { Box, Button, Heading } from '@chakra-ui/react';
-import ReactMarkdown from 'react-markdown';
 import { MdOutlineArrowBackIosNew } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '../../global/components/Loading';
 import { Product as i18n } from '../../global/i18n';
 import store from '../../redux/store';
 import Carousel from './components/Carousel';
-import Code from './components/Code';
+import Markdown from '../../global/components/Markdown';
 
 export default () => {
   const [product, setProduct] = useState(null);
@@ -82,12 +81,7 @@ export default () => {
       <div>
         <Heading my={3}>{i18n.description}</Heading>
         <Heading my={3} size="md">{product.name}</Heading>
-        <ReactMarkdown
-          components={{ code: Code }}
-          skipHtml
-        >
-          {product.description || ''}
-        </ReactMarkdown>
+        <Markdown>{product.description || ''}</Markdown>
       </div>
     </div>
   );
