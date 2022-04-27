@@ -28,9 +28,6 @@ export const Home = new LocalizedStrings({
 
 export const Product = new LocalizedStrings({
   en: {
-    downloadFailedAlert: {
-      header: 'Failed to Get Product Details',
-    },
   },
 });
 
@@ -57,6 +54,7 @@ export const Manage = new LocalizedStrings({
       required: 'This Field is Required',
       save: 'Save Product',
       saveChanges: 'Save Changes',
+      delete: 'Delete Product',
     },
   },
 });

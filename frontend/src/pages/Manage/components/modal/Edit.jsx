@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, FormControl, FormLabel, Grid, GridItem, Heading,
+  Box, Button, ButtonGroup, FormControl, FormLabel, Grid, GridItem, Heading,
   InputGroup, InputLeftAddon, Text, Textarea, useColorModeValue,
 } from '@chakra-ui/react';
 import CurrencyInput from 'react-currency-input-field';
@@ -13,6 +13,7 @@ import store from '../../../../redux/store';
 import FileUpload from '../FileUpload';
 import DeletableImage from '../DeletableImage';
 import { getAuthHeaders, uploadImage } from '../../../../global/api';
+import { setToast } from '../../../../global/toast';
 
 const InputGroupStyle = {
   marginTop: '1rem',
@@ -49,15 +50,29 @@ export default ({ product, closeModal }) => {
 
       const data = await resp.json();
       if (resp.ok) {
-        store.dispatch({ type: 'SET_ALERT', data: { header: 'Item Updated Successfully!', content: 'Your Changes have Been Saved and Will Be Reflected on the Management Page' } });
+        setToast('Product Updated Successfully!', '', 'success');
         setLoading(false);
         return true;
       }
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Item', content: JSON.stringify(data) } });
+      setToast('Failed to Edit Product', data?.error || '', 'error');
     } catch (ex) {
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Edit Item in Catch Block', content: ex } });
+      setToast('Failed to Edit Product', ex || '', 'error');
     }
     setLoading(false);
+    return false;
+  };
+
+  const del = async () => {
+    // eslint-disable-next-line no-alert
+    if (window.confirm('Are you sure you want to delete this Product?')) {
+      // eslint-disable-next-line no-underscore-dangle
+      const resp = await fetch(`/api/v1/products/${product._id}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
+      setToast(`Deleted ${product.name} Successfully`, '', 'info');
+      return resp.ok;
+    }
     return false;
   };
 
@@ -203,17 +218,25 @@ export default ({ product, closeModal }) => {
           ))}
         </Grid>
 
-        <Button
-          display="block"
-          mx="auto"
-          mt={4}
-          colorScheme="green"
-          isLoading={loading}
-          type="submit"
-          onClick={() => save().then((x) => { if (x) closeModal(); })}
-        >
-          {i18n.labels.saveChanges}
-        </Button>
+        <ButtonGroup textAlign="center" display="block" mx="auto" mt={4}>
+          <Button
+            colorScheme="green"
+            isLoading={loading}
+            type="submit"
+            onClick={() => save().then((x) => { if (x) closeModal(); })}
+          >
+            {i18n.labels.saveChanges}
+          </Button>
+
+          <Button
+            colorScheme="red"
+            type="button"
+            onClick={() => del().then((x) => { if (x) closeModal(); })}
+          >
+            {i18n.labels.delete}
+          </Button>
+        </ButtonGroup>
+
       </Box>
     </div>
   );

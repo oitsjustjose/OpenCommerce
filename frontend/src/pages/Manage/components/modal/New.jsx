@@ -12,6 +12,7 @@ import { Manage as i18n } from '../../../../global/i18n';
 import store from '../../../../redux/store';
 import FileUpload from '../FileUpload';
 import { getAuthHeaders, uploadImage } from '../../../../global/api';
+import { setToast } from '../../../../global/toast';
 
 const InputGroupStyle = {
   marginTop: '1rem',
@@ -46,13 +47,13 @@ export default ({ closeModal }) => {
 
       const data = await resp.json();
       if (resp.ok) {
-        store.dispatch({ type: 'SET_ALERT', data: { header: 'Added New Product!', content: 'Your New Product has Been Saved and Will Be Reflected on the Management Page' } });
+        setToast('Added New Product Successfully!', '', 'success');
         setLoading(false);
         return true;
       }
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Product', content: JSON.stringify(data) } });
+      setToast('Failed to Add Product', data?.error || '', 'error');
     } catch (ex) {
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Product', content: ex } });
+      setToast('Failed to Add Product', ex || '', 'error');
     }
     setLoading(false);
     return false;

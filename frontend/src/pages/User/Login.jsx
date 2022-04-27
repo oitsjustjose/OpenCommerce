@@ -8,6 +8,7 @@ import store from '../../redux/store';
 import StandardInput from '../../global/components/FormControl/StandardInput';
 import IconTextDuo from '../../global/components/IconTextDuo';
 import { Login as i18n } from '../../global/i18n';
+import { setToast } from '../../global/toast';
 
 export default () => {
   const [state, setState] = useState({ email: '', password: '' });
@@ -28,7 +29,7 @@ export default () => {
 
     if (resp.ok) {
       store.dispatch({ type: 'SET_USER_TOKEN', token: data.token });
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Logged In!', content: '' } });
+      setToast(`Welcome ${data.first}!`, '', 'info');
       setTimeout(() => store.dispatch({ type: 'SET_ALERT', data: null }), 1000);
       navigate('/', { replace: true });
     } else {

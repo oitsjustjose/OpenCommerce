@@ -1,3 +1,4 @@
+import { setToast } from '../global/toast';
 import store from './store';
 
 const decodeAndDispatch = async (token) => {
@@ -9,6 +10,7 @@ const decodeAndDispatch = async (token) => {
 
     if (resp.ok) {
       store.dispatch({ type: 'SET_USER', data: { ...data, token } });
+      setToast(`Welcome ${data.email}!`, '', 'info');
     } else {
       if (resp.status === 410 && window.localStorage.getItem('auth-token')) {
         window.localStorage.removeItem('auth-token');
@@ -21,9 +23,9 @@ const decodeAndDispatch = async (token) => {
 };
 
 export const decodeFromToken = async (token) => {
-  decodeAndDispatch(token);
+  await decodeAndDispatch(token);
 };
 
 export const decodeFromLocalStorage = async () => {
-  decodeAndDispatch(window.localStorage.getItem('auth-token'));
+  await decodeAndDispatch(window.localStorage.getItem('auth-token'));
 };

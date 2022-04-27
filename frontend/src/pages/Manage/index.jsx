@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Table, Thead, Tbody, Tr, Th, Td, TableContainer, Box, Button, Flex,
+  Table, Thead, Tbody, Tr, Th, Td, TableContainer, Box, Button, Flex, Heading,
 } from '@chakra-ui/react';
-import { BiSearchAlt2 } from 'react-icons/bi';
+import { BiSearchAlt2, BiPlus } from 'react-icons/bi';
 import { Manage as i18n } from '../../global/i18n';
 import Loading from '../../global/components/Loading';
 import store from '../../redux/store';
@@ -11,6 +11,7 @@ import DynamicModal from './components/DynamicModal';
 import New from './components/modal/New';
 import Edit from './components/modal/Edit';
 import search from '../../global/search';
+import IconTextDuo from '../../global/components/IconTextDuo';
 
 const init = async (setProductsPt, setLoadedPt, setAllProductsPt) => {
   const resp = await fetch('/api/v1/products');
@@ -45,8 +46,15 @@ export default () => {
 
   return (
     <div>
+      <Heading my={3} textAlign="center">
+        OpenCommerce Store
+      </Heading>
+      <Heading size="md" my={3} textAlign="center">
+        Product Management
+      </Heading>
+
       <Flex justifyContent="center" alignItems="center">
-        <Box maxW="400px" m="auto">
+        <Box>
           <InlineLabelInput
             propChangeEvt={(evt) => setProducts(search(evt.target.value, allProducts))}
             propKeyPressEvt={() => {}}
@@ -61,7 +69,7 @@ export default () => {
         </Box>
 
         <Button backgroundColor="green.400" onClick={() => setNewModal(true)}>
-          Create
+          <IconTextDuo text="Create" icon={(<BiPlus />)} />
         </Button>
       </Flex>
 

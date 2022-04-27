@@ -5,6 +5,7 @@ const defaultState = {
   i18n: null,
   langs: null,
   alert: null,
+  toast: null,
 };
 
 // eslint-disable-next-line default-param-last
@@ -42,6 +43,11 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         alert: action.data || null,
+      };
+    case 'SET_TOAST':
+      return {
+        ...state,
+        toast: action.data || null,
       };
     default:
       return state;

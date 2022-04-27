@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 export default ({ product }) => {
   const filtered = product.images.filter((x) => x !== null);
   const images = filtered.length ? filtered : ['https://dv2ls.com/f/PpMcVb8gN'];
-  const nav = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -29,7 +29,7 @@ export default ({ product }) => {
       rounded="lg"
       pos="relative"
       zIndex={1}
-      onClick={() => nav(`/product?productId=${product._id}`, { replace: true })}
+      onClick={() => navigate(`/product/${product._id}`, { replace: true })}
       _hover={{
         transition: 'all .3s ease',
         boxShadow: 'var(--chakra-shadows-2xl)',

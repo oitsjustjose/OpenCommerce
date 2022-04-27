@@ -10,8 +10,9 @@ import Manage from './pages/Manage/index';
 import Login from './pages/User/Login';
 import Register from './pages/User/Register';
 import Navbar from './global/components/Nav/Navbar';
-import AlertModal from './global/components/Modal/Alert';
+import AlertModal from './global/components/Notification/Modal';
 import Footer from './global/components/Footer';
+import Toast from './global/components/Notification/Toast';
 
 export const Pages = [
   {
@@ -56,7 +57,7 @@ export const Pages = [
   },
   {
     name: 'Product',
-    path: '/product',
+    path: '/product/:id',
     icon: null,
     element: (<Product />),
     adminOnly: false,
@@ -79,6 +80,7 @@ const Routes = ({ user }) => (
         }
     </RouterRoutes>
     <AlertModal />
+    <Toast />
     <Footer />
   </BrowserRouter>
 );
