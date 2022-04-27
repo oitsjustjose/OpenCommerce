@@ -11,6 +11,7 @@ export const General = new LocalizedStrings({
     login: 'Log In',
     logout: 'Log Out',
     changeColorMode: 'Toggle Light/Dark Theme',
+    loading: 'Loading..',
     footer: {
       part1: 'Made with 💙 by',
       part2: 'using',
@@ -28,22 +29,38 @@ export const Home = new LocalizedStrings({
 
 export const Product = new LocalizedStrings({
   en: {
+    soldOut: 'Sold Out',
+    addToCart: 'Add To Cart',
+    description: 'Description',
+    noPhotos: 'No Photos Available',
   },
 });
 
 export const Manage = new LocalizedStrings({
   en: {
+    title: 'Product Management',
     edit: {
       title: (name) => `Editing ${name}`,
+      alerts: {
+        success: 'Product Updated Successfully!',
+        failure: 'Failed to Edit Product',
+        delete: 'Are you sure you want to delete this product?',
+        deleteImage: 'Do you want to delete this image?',
+      },
     },
     create: {
+      button: 'Create',
       title: 'Create Product',
-      fileUpload: (count) => `${count || 'No'} ${count === 1 ? 'File' : 'Files'} Selected`,
-      itemCreatedSuccess: (id) => ({
-        header: 'Item Added!',
-        content: `Item created with ID ${id}`,
-      }),
+      alerts: {
+        success: 'Product Created Successfully!',
+        failure: 'Failed to Create Product',
+      },
     },
+    missingInfo: {
+      header: 'Missing Info',
+      content: 'Not all required fields have been filled. Please provide this info to proceed.',
+    },
+    fileUpload: (count) => `${count || 'No'} ${count === 1 ? 'File' : 'Files'} Selected`,
     labels: {
       name: 'Name',
       desc: 'Description',
@@ -52,15 +69,18 @@ export const Manage = new LocalizedStrings({
       rating: 'Rating',
       hidden: 'Hidden',
       required: 'This Field is Required',
-      save: 'Save Product',
+      saveProduct: 'Save Product',
       saveChanges: 'Save Changes',
       delete: 'Delete Product',
+      search: 'Search..',
+      noReview: 'No Reviews',
     },
   },
 });
 
 export const Login = new LocalizedStrings({
   en: {
+    error: 'There was an Error Logging In',
     logoutAlert: {
       header: 'You Have Been Logged Out',
       content: 'You\'ve been logged out automatically as it has been more than 1 day since you last logged in. Please log in again.',
@@ -70,8 +90,6 @@ export const Login = new LocalizedStrings({
       email: 'Email Address',
       password: 'Password',
       required: 'This Field is Required',
-    },
-    buttons: {
       submit: 'Log In',
     },
   },

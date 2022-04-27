@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { BsStarFill, BsStarHalf } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import { Product as i18n } from '../../../global/i18n';
 
 export default ({ product }) => {
   const filtered = product.images.filter((x) => x !== null);
@@ -62,7 +63,7 @@ export default ({ product }) => {
           {product.name}
         </Heading>
         <Text color="gray.500" fontSize="sm" textTransform="uppercase">
-          {product.quantity === 0 ? 'Sold Out' : `$${product.price}`}
+          {product.quantity === 0 ? i18n.soldOut : `$${product.price}`}
         </Text>
       </Stack>
     </Box>

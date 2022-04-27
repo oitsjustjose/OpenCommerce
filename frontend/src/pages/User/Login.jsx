@@ -35,7 +35,7 @@ export default () => {
     } else {
       store.dispatch({
         type: 'SET_ALERT',
-        data: { header: 'There was an Error Logging In', content: data.error },
+        data: { header: i18n.error, content: data.error },
       });
     }
 
@@ -119,7 +119,7 @@ export default () => {
           type="submit"
           onClick={login}
         >
-          <IconTextDuo iconOnRight icon={(<MdLogin />)} text={i18n.buttons.submit} />
+          <IconTextDuo iconOnRight icon={(<MdLogin />)} text={i18n.labels.submit} />
         </Button>
       </Box>
     </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Flex, Heading, Spinner } from '@chakra-ui/react';
+import { General as i18n } from '../i18n';
 
 export default () => (
   <div>
@@ -13,7 +14,7 @@ export default () => (
       />
     </Flex>
     <Flex justifyContent="center" alignItems="center" mt={2}>
-      <Heading size="lg"> Loading</Heading>
+      <Heading size="lg">{i18n.loading}</Heading>
     </Flex>
   </div>
 );

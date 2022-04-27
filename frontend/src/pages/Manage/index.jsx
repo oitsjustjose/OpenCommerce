@@ -47,10 +47,10 @@ export default () => {
   return (
     <div>
       <Heading my={3} textAlign="center">
-        OpenCommerce Store
+        {process.env.REACT_APP_NAME}
       </Heading>
       <Heading size="md" my={3} textAlign="center">
-        Product Management
+        {i18n.title}
       </Heading>
 
       <Flex justifyContent="center" alignItems="center">
@@ -60,16 +60,16 @@ export default () => {
             propKeyPressEvt={() => {}}
             propSubmitEvt={() => {}}
             type="text"
-            labelBgColor="green.400"
+            labelBgColor="purple.400"
             labelFgColor="white"
             labelIcon={(<BiSearchAlt2 />)}
-            labelText="Search.."
+            labelText={i18n.labels.search}
             error={null}
           />
         </Box>
 
-        <Button backgroundColor="green.400" onClick={() => setNewModal(true)}>
-          <IconTextDuo text="Create" icon={(<BiPlus />)} />
+        <Button colorScheme="blue" onClick={() => setNewModal(true)}>
+          <IconTextDuo text={i18n.create.button} icon={(<BiPlus />)} />
         </Button>
       </Flex>
 
@@ -96,7 +96,7 @@ export default () => {
                 <Td>{x.name}</Td>
                 <Td>{`$${x.price}`}</Td>
                 <Td>{x.quantity}</Td>
-                <Td>{x.overallRating || 'No Reviews'}</Td>
+                <Td>{x.overallRating || i18n.labels.noReview}</Td>
               </Tr>
             ))}
           </Tbody>

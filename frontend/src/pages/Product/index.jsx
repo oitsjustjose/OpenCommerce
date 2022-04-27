@@ -57,7 +57,9 @@ export default () => {
         <Carousel photos={product.images} />
       ) : (
         <Heading textAlign="center" size="md">
-          (No Photos Available)
+          (
+          {i18n.noPhotos}
+          )
         </Heading>
       )}
 
@@ -71,14 +73,14 @@ export default () => {
         </Heading>
 
         <Button colorScheme="green">
-          Add to Cart
+          {i18n.addToCart}
         </Button>
       </Box>
 
       <hr style={{ margin: '2rem auto' }} />
 
       <div>
-        <Heading my={3}>Description</Heading>
+        <Heading my={3}>{i18n.description}</Heading>
         <Heading my={3} size="md">{product.name}</Heading>
         <ReactMarkdown
           components={{ code: Code }}

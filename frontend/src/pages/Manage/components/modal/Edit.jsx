@@ -34,7 +34,7 @@ export default ({ product, closeModal }) => {
   const save = async () => {
     setLoading(true);
     if (!state.name.length || !state.quantity || !state.price || !state.description) {
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Missing Info', content: 'Not all required fields have been filled. Please provide this info to proceed.' } });
+      store.dispatch({ type: 'SET_ALERT', data: i18n.missingInfo });
       setLoading(false);
       return false;
     }
@@ -50,13 +50,13 @@ export default ({ product, closeModal }) => {
 
       const data = await resp.json();
       if (resp.ok) {
-        setToast('Product Updated Successfully!', '', 'success');
+        setToast(i18n.edit.alerts.success, '', 'success');
         setLoading(false);
         return true;
       }
-      setToast('Failed to Edit Product', data?.error || '', 'error');
+      setToast(i18n.edit.alerts.failure, data?.error || '', 'error');
     } catch (ex) {
-      setToast('Failed to Edit Product', ex || '', 'error');
+      setToast(i18n.edit.alerts.failure, ex || '', 'error');
     }
     setLoading(false);
     return false;
@@ -64,7 +64,7 @@ export default ({ product, closeModal }) => {
 
   const del = async () => {
     // eslint-disable-next-line no-alert
-    if (window.confirm('Are you sure you want to delete this Product?')) {
+    if (window.confirm(i18n.edit.alerts.delete)) {
       // eslint-disable-next-line no-underscore-dangle
       const resp = await fetch(`/api/v1/products/${product._id}`, {
         method: 'DELETE',
@@ -139,7 +139,7 @@ export default ({ product, closeModal }) => {
         >
           <InputGroup style={InputGroupStyle}>
             <InputLeftAddon backgroundColor="#8a56c2" color="white">
-              <IconTextDuo icon={(<AiOutlineNumber />)} text="Qty" />
+              <IconTextDuo icon={(<AiOutlineNumber />)} text={i18n.labels.qty} />
             </InputLeftAddon>
             {/* Use currency input to nicely handle whole numerical values */}
             <CurrencyInput
@@ -164,7 +164,9 @@ export default ({ product, closeModal }) => {
           margin="auto"
         >
           <InputGroup style={InputGroupStyle}>
-            <InputLeftAddon backgroundColor="#fbb355" color="black"><IconTextDuo icon={(<BsCurrencyDollar />)} text="Price" /></InputLeftAddon>
+            <InputLeftAddon backgroundColor="#fbb355" color="black">
+              <IconTextDuo icon={(<BsCurrencyDollar />)} text={i18n.labels.price} />
+            </InputLeftAddon>
             <CurrencyInput
               prefix="$"
               decimalsLimit={2}
@@ -205,7 +207,7 @@ export default ({ product, closeModal }) => {
               <DeletableImage
                 onClick={() => {
                   // eslint-disable-next-line no-alert
-                  if (window.confirm('Do you want to delete this image?')) {
+                  if (window.confirm(i18n.edit.alerts.deleteImage)) {
                     setState({
                       ...state,
                       images: state.images.filter((i) => i !== x),

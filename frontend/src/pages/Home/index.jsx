@@ -42,7 +42,7 @@ export default () => {
   return (
     <div>
       <Heading textAlign="center">
-        OpenCommerce Store
+        {process.env.REACT_APP_NAME}
       </Heading>
       <Box maxW="400px" m="auto">
         <InlineLabelInput

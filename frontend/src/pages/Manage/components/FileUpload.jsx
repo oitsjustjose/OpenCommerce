@@ -41,7 +41,7 @@ export default ({
         onClick={() => inputRef.current.click()}
         readOnly
         background="blue.300"
-        value={i18n.create.fileUpload(files.length)}
+        value={i18n.fileUpload(files.length)}
       />
     </InputGroup>
   );

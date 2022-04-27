@@ -32,7 +32,7 @@ export default ({ closeModal }) => {
   const save = async () => {
     setLoading(true);
     if (!state.name.length || !state.quantity || !state.price || !state.description) {
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Missing Info', content: 'Not all required fields have been filled. Please provide this info to proceed.' } });
+      store.dispatch({ type: 'SET_ALERT', data: i18n.missingInfo });
       setLoading(false);
       return false;
     }
@@ -47,13 +47,13 @@ export default ({ closeModal }) => {
 
       const data = await resp.json();
       if (resp.ok) {
-        setToast('Added New Product Successfully!', '', 'success');
+        setToast(i18n.create.alerts.success, '', 'success');
         setLoading(false);
         return true;
       }
-      setToast('Failed to Add Product', data?.error || '', 'error');
+      setToast(i18n.create.alerts.failure, data?.error || '', 'error');
     } catch (ex) {
-      setToast('Failed to Add Product', ex || '', 'error');
+      setToast(i18n.create.alerts.failure, ex || '', 'error');
     }
     setLoading(false);
     return false;
@@ -122,7 +122,7 @@ export default ({ closeModal }) => {
         >
           <InputGroup style={InputGroupStyle}>
             <InputLeftAddon backgroundColor="#8a56c2" color="white">
-              <IconTextDuo icon={(<AiOutlineNumber />)} text="Qty" />
+              <IconTextDuo icon={(<AiOutlineNumber />)} text={i18n.labels.qty} />
             </InputLeftAddon>
             {/* Use currency input to nicely handle whole numerical values */}
             <CurrencyInput
@@ -146,7 +146,9 @@ export default ({ closeModal }) => {
           margin="auto"
         >
           <InputGroup style={InputGroupStyle}>
-            <InputLeftAddon backgroundColor="#fbb355" color="black"><IconTextDuo icon={(<BsCurrencyDollar />)} text="Price" /></InputLeftAddon>
+            <InputLeftAddon backgroundColor="#fbb355" color="black">
+              <IconTextDuo icon={(<BsCurrencyDollar />)} text={i18n.labels.price} />
+            </InputLeftAddon>
             <CurrencyInput
               prefix="$"
               decimalsLimit={2}
@@ -189,7 +191,7 @@ export default ({ closeModal }) => {
           type="submit"
           onClick={() => save().then((x) => { if (x) closeModal(); })}
         >
-          {i18n.labels.save}
+          {i18n.labels.saveProduct}
         </Button>
       </Box>
     </div>
