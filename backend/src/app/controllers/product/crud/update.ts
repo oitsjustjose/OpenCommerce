@@ -25,6 +25,8 @@ export default async (req: Request, res: Response) => {
     product.quantity = req.body.quantity || product.quantity;
     product.price = req.body.price || product.price;
     product.hidden = req.body.hidden || product.hidden;
+    product.description = req.body.description || product.description;
+    product.images = req.body.images || product.images;
 
     await product.save();
     return res.status(200).json(product);

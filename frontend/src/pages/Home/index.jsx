@@ -9,21 +9,12 @@ import Card from './components/Card';
 import { Home as i18n } from '../../global/i18n';
 import Loading from '../../global/components/Loading';
 import InlineLabelInput from '../../global/components/FormControl/InlineLabelInput';
+import search from '../../global/search';
 
 export default () => {
   const [hasLoaded, setLoaded] = useState(false);
   const [allProducts, setAllProducts] = useState([]);
   const [products, setProducts] = useState([]);
-
-  const doSearch = (evt) => {
-    const terms = evt.target.value.toLowerCase();
-    if (terms.length) {
-      const filtered = products.filter((x) => x.name.toLowerCase().includes(terms));
-      setProducts(filtered);
-    } else {
-      setProducts(allProducts);
-    }
-  };
 
   useEffect(() => {
     if (hasLoaded) return () => {};
@@ -55,7 +46,7 @@ export default () => {
       </Heading>
       <Box maxW="400px" m="auto">
         <InlineLabelInput
-          propChangeEvt={doSearch}
+          propChangeEvt={(evt) => setProducts(search(evt.target.value, allProducts))}
           propKeyPressEvt={() => {}}
           propSubmitEvt={() => {}}
           type="text"

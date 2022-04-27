@@ -2,6 +2,8 @@ import LocalizedStrings from 'react-localization';
 
 export const General = new LocalizedStrings({
   en: {
+    yes: 'Yes',
+    no: 'No',
     close: 'Close',
     save: 'Save',
     openMenu: 'Open Menu',
@@ -33,6 +35,9 @@ export const Product = new LocalizedStrings({
 
 export const Manage = new LocalizedStrings({
   en: {
+    edit: {
+      title: (name) => `Editing ${name}`,
+    },
     create: {
       title: 'Create Product',
       fileUpload: (count) => `${count || 'No'} ${count === 1 ? 'File' : 'Files'} Selected`,
@@ -40,14 +45,17 @@ export const Manage = new LocalizedStrings({
         header: 'Item Added!',
         content: `Item created with ID ${id}`,
       }),
-      labels: {
-        name: 'Name',
-        desc: 'Description (Supports Markdown)',
-        price: 'Price',
-        qty: 'Quantity',
-        required: 'This Field is Required',
-        save: 'Save Product',
-      },
+    },
+    labels: {
+      name: 'Name',
+      desc: 'Description',
+      price: 'Price',
+      qty: 'Quantity',
+      rating: 'Rating',
+      hidden: 'Hidden',
+      required: 'This Field is Required',
+      save: 'Save Product',
+      saveChanges: 'Save Changes',
     },
   },
 });

@@ -6,7 +6,7 @@ import {
 import { FiFile } from 'react-icons/fi';
 import { Manage as i18n } from '../../../global/i18n';
 
-export const FileUpload = ({
+export default ({
   name,
   placeholder,
   propagateChange,
@@ -46,5 +46,3 @@ export const FileUpload = ({
     </InputGroup>
   );
 };
-
-export default FileUpload;

@@ -1,225 +1,133 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Box, Button, FormControl, FormLabel, Heading,
-  InputGroup, InputLeftAddon, Text, Textarea, useColorModeValue,
+  Table, Thead, Tbody, Tr, Th, Td, TableContainer, Box, Button, Flex,
 } from '@chakra-ui/react';
-import CurrencyInput from 'react-currency-input-field';
-import { AiOutlineFileText, AiOutlineNumber } from 'react-icons/ai';
-import { BsCurrencyDollar } from 'react-icons/bs';
-import InlineLabelInput from '../../global/components/FormControl/InlineLabelInput';
-import IconTextDuo from '../../global/components/IconTextDuo';
-import { Manage as i18n } from '../../global/i18n';
+import { BiSearchAlt2 } from 'react-icons/bi';
+import { Manage as i18n, General } from '../../global/i18n';
+import Loading from '../../global/components/Loading';
 import store from '../../redux/store';
-import { FileUpload } from './components/FileUpload';
+import InlineLabelInput from '../../global/components/FormControl/InlineLabelInput';
+import DynamicModal from './components/DynamicModal';
+import New from './components/modal/New';
+import Edit from './components/modal/Edit';
+import search from '../../global/search';
 
-const InputGroupStyle = {
-  marginTop: '1rem',
-  marginBottom: '1rem',
-};
-
-const uploadImage = async (file) => {
-  const fd = new FormData();
-  fd.append('file', file);
-  const resp = await fetch('/api/v1/fileupload', { method: 'POST', body: fd });
-  const { output, error } = await resp.json();
-  if (error) {
-    // eslint-disable-next-line no-console
-    console.error(error);
-    return null;
+const init = async (setProductsPt, setLoadedPt, setAllProductsPt) => {
+  const resp = await fetch('/api/v1/products');
+  const data = await resp.json();
+  if (resp.ok) {
+    setProductsPt(data);
+    setAllProductsPt(data);
+    setLoadedPt(true);
+  } else {
+    store.dispatch({ type: 'SET_ALERT', data: { header: i18n.downloadFailedAlert.header, content: JSON.stringify(data.error) } });
   }
-  return `/api/v1/fileupload/${output}`;
 };
 
 export default () => {
-  const [loading, setLoading] = useState(false);
-  const [state, setState] = useState({
-    name: '',
-    description: '',
-    quantity: null,
-    price: null,
-    images: [],
-  });
+  // New Product Modal management
+  const [newModal, setNewModal] = useState(false);
+  const [editItem, setEditItem] = useState(null);
 
-  const save = async () => {
-    setLoading(true);
-    if (!state.name.length || !state.quantity || !state.price) {
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Missing Info', content: 'Not all required fields have been filled. Please provide this info to proceed.' } });
-      setLoading(false);
-      return;
-    }
-    try {
-      // Step 1: Upload image files
-      const imageUrls = await Promise.all(state.images.map(uploadImage));
-      // Step 2: Upload the rest
-      const resp = await fetch('/api/v1/products', {
-        method: 'PUT',
-        headers: {
-          authorization: `Bearer ${window.localStorage.getItem('auth-token')}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...state,
-          images: imageUrls.length ? imageUrls : ['https://dv2ls.com/f/PpMcVb8gN'],
-        }),
-      });
+  const [hasLoaded, setLoaded] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+  const [products, setProducts] = useState([]);
 
-      const data = await resp.json();
-      if (resp.ok) {
-        // Workaround for resetting this form as many custom inputs == VERY difficult to do
-        // eslint-disable-next-line no-underscore-dangle
-        window.location.href = `${window.location.href}?_id=${data._id}`;
-      } else {
-        store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Item', content: JSON.stringify(data) } });
-      }
-    } catch (ex) {
-      store.dispatch({ type: 'SET_ALERT', data: { header: 'Failed to Add Item in Catch Block', content: ex } });
-    }
-    setLoading(false);
-  };
-
-  // Workaround for resetting this form as many custom inputs == VERY difficult to do
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('_id')) {
-      store.dispatch({ type: 'SET_ALERT', data: { ...i18n.create.itemCreatedSuccess(params.get('_id')) } });
-      window.history.replaceState(null, null, window.location.pathname);
-    }
+    if (hasLoaded) return () => {};
+    init(setProducts, setLoaded, setAllProducts);
     return () => {};
-  }, []);
+  }, [hasLoaded, setLoaded, setProducts, setAllProducts]);
+
+  if (!hasLoaded) {
+    return (<Loading />);
+  }
 
   return (
     <div>
-      <Heading textAlign="center" marginBottom="1rem">
-        {i18n.create.title}
-      </Heading>
-
-      <Box
-        borderRadius="2xl"
-        padding="2rem"
-        backgroundColor="blackAlpha.200"
-        w="100%"
-        maxW="768px"
-        margin="auto"
-      >
-        <InlineLabelInput
-          required
-          type="text"
-          propSubmitEvt={save}
-          propChangeEvt={(e) => setState({ ...state, name: e.target.value })}
-          propKeyPressEvt={(e) => e.key === 'Enter' && save()}
-          value={state.name}
-          labelText={i18n.create.labels.name}
-          labelIcon={(<AiOutlineFileText />)}
-          labelBgColor="#fa6663"
-          labelFgColor="black"
-          error={!state.name.length ? i18n.create.labels.required : null}
-        />
-
-        <FormControl
-          onSubmit={() => {}}
-          padding="0.5rem"
-          borderRadius="8px"
-          margin="auto"
-          variant="floating"
-        >
-          <Textarea
-            id="manage-text-area"
-            value={state.description}
-            onChange={(e) => setState({ ...state, description: e.target.value })}
-            background={useColorModeValue('gray.50', 'gray.700')}
-            resize="vertical"
-            size="md"
+      <Flex justifyContent="center" alignItems="center">
+        <Box maxW="400px" m="auto">
+          <InlineLabelInput
+            propChangeEvt={(evt) => setProducts(search(evt.target.value, allProducts))}
+            propKeyPressEvt={() => {}}
+            propSubmitEvt={() => {}}
+            type="text"
+            labelBgColor="green.400"
+            labelFgColor="white"
+            labelIcon={(<BiSearchAlt2 />)}
+            labelText="Search.."
+            error={null}
           />
+        </Box>
 
-          {state.description.length === 0 && (
-          <FormLabel background="green.400" borderTopLeftRadius="8px" px={2} py={1}>
-            <IconTextDuo icon={(<AiOutlineFileText />)} text={i18n.create.labels.desc} />
-          </FormLabel>
-          )}
-
-          <Text fontSize=".75rem" color="red.500">{!state.description.length ? i18n.create.labels.required : null}</Text>
-        </FormControl>
-
-        <FormControl
-          onSubmit={save}
-          onKeyPress={(e) => e.key === 'Enter' && save()}
-          isRequired
-          padding=".5rem"
-          borderRadius="8px"
-          margin="auto"
-        >
-          <InputGroup style={InputGroupStyle}>
-            <InputLeftAddon backgroundColor="#8a56c2" color="white">
-              <IconTextDuo icon={(<AiOutlineNumber />)} text="Qty" />
-            </InputLeftAddon>
-            {/* Use currency input to nicely handle whole numerical values */}
-            <CurrencyInput
-              prefix=""
-              allowDecimals={false}
-              className="chakra-input currency"
-              onValueChange={(value) => setState({
-                ...state, quantity: JSON.parse(value),
-              })}
-            />
-          </InputGroup>
-          <Text fontSize=".75rem" color="red.500">{!state.quantity ? i18n.create.labels.required : null}</Text>
-        </FormControl>
-
-        <FormControl
-          onSubmit={save}
-          onKeyPress={(e) => e.key === 'Enter' && save()}
-          isRequired
-          padding=".5rem"
-          borderRadius="8px"
-          margin="auto"
-        >
-          <InputGroup style={InputGroupStyle}>
-            <InputLeftAddon backgroundColor="#fbb355" color="black"><IconTextDuo icon={(<BsCurrencyDollar />)} text="Price" /></InputLeftAddon>
-            <CurrencyInput
-              prefix="$"
-              decimalsLimit={2}
-              className="chakra-input currency"
-              onValueChange={(value) => setState({
-                ...state, price: JSON.parse(value),
-              })}
-            />
-          </InputGroup>
-          <Text fontSize=".75rem" color="red.500">{!state.price ? i18n.create.labels.required : null}</Text>
-        </FormControl>
-        <FormControl
-          onSubmit={save}
-          onKeyPress={(e) => e.key === 'Enter' && save()}
-          isRequired
-          padding=".5rem"
-          borderRadius="8px"
-          margin="auto"
-        >
-          <InputGroup style={InputGroupStyle}>
-            <FileUpload
-              name="image"
-              acceptedFileTypes="image/*"
-              required
-              allowMultipleFiles
-              propagateChange={(evt) => setState({
-                ...state,
-                images: Array.from(evt.target.files),
-              })}
-            />
-          </InputGroup>
-        </FormControl>
-
-        <Button
-          display="block"
-          mx="auto"
-          mt={4}
-          colorScheme="green"
-          isLoading={loading}
-          type="submit"
-          onClick={save}
-        >
-          {i18n.create.labels.save}
+        <Button backgroundColor="green.400" onClick={() => setNewModal(true)}>
+          Create
         </Button>
-      </Box>
+      </Flex>
+
+      <hr />
+
+      <TableContainer>
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>{i18n.labels.name}</Th>
+              <Th>{i18n.labels.desc}</Th>
+              <Th>{i18n.labels.price}</Th>
+              <Th>{i18n.labels.qty}</Th>
+              <Th>{i18n.labels.hidden}</Th>
+              <Th>{i18n.labels.rating}</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {products.map((x) => (
+              <Tr
+                onClick={() => setEditItem(x)}
+                cursor="pointer"
+                _hover={{ backgroundColor: 'var(--chakra-colors-green-500)' }}
+                key={x.name}
+              >
+                <Td>{x.name}</Td>
+                <Td>
+                  {x.description?.substring(0, 24)}
+                  ...
+                </Td>
+                <Td>
+                  $
+                  {x.price}
+                </Td>
+                <Td>{x.quantity}</Td>
+                <Td>{x.hidden ? General.yes : General.no}</Td>
+                <Td>{x.overallRating || 'No Reviews'}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+
+      <DynamicModal
+        open={newModal}
+        header={i18n.create.title}
+        superOnClose={() => {
+          setNewModal(false);
+          init(setProducts, setLoaded, setAllProducts);
+        }}
+        size="3xl"
+      >
+        <New />
+      </DynamicModal>
+
+      <DynamicModal
+        open={!!editItem}
+        header={i18n.edit.title(editItem?.name)}
+        superOnClose={() => {
+          setEditItem(null);
+          init(setProducts, setLoaded, setAllProducts);
+        }}
+        size="3xl"
+      >
+        <Edit product={editItem} />
+      </DynamicModal>
     </div>
   );
 };

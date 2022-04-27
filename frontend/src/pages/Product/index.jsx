@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import { Box, Button, Heading } from '@chakra-ui/react';
+import {
+  Box, Button, Code, Heading,
+} from '@chakra-ui/react';
 import ReactMarkdown from 'react-markdown';
 import Loading from '../../global/components/Loading';
 import { Product as i18n } from '../../global/i18n';
@@ -70,7 +72,9 @@ export default () => {
 
       <hr style={{ margin: '2rem auto' }} />
 
-      <p>{JSON.stringify(product)}</p>
+      <Code colorScheme="cyan">
+        {JSON.stringify(product, null, 2)}
+      </Code>
     </div>
   );
 };
